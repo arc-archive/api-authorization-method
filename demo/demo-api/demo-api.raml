@@ -1,0 +1,78 @@
+#%RAML 1.0
+title: Authorization Test API
+version: v1
+baseUri: http://api.domain.com/
+
+types:
+  apiTokens: # each is optional, not exclusive with anything
+    properties:
+      userToken: number
+      applicationToken?: number
+
+securitySchemes:
+  basic:
+    type: Basic Authentication
+    description: |
+      This API supports Basic Authentication.
+  digest:
+    description: |
+      This API supports DigestSecurityScheme Authentication.
+    type: Digest Authentication
+  passthrough:
+    description: |
+      This API supports Pass Through Authentication.
+    type: Pass Through
+    describedBy:
+      queryParameters:
+        query:
+          type: string
+      headers:
+        api_key:
+          type: string
+  custom_scheme:
+    description: |
+      A custom security scheme for authenticating requests.
+    type: x-custom
+    displayName: RAML's custom scheme
+    describedBy:
+      headers:
+        SpecialToken:
+          description: |
+            Used to send a custom token.
+          type: string
+      queryString:
+        type: apiTokens
+        examples:
+          first:
+            value:
+              userToken: 1234
+              applicationToken: 5678
+          second:
+            value:
+              start: 1239874566
+              page-size: 987321456
+      responses:
+        401:
+          description: |
+            Bad token.
+        403:
+  custom1: !include x-custom.raml
+  custom2: !include x-other.raml
+/basic:
+  get:
+    securedBy: basic
+/digest:
+  get:
+    securedBy: digest
+/passthrough:
+  get:
+    securedBy: passthrough
+/custom-query-string:
+  get:
+    securedBy: custom_scheme
+/custom1:
+  get:
+    securedBy: [custom1]
+/custom2:
+  get:
+    securedBy: [custom2]

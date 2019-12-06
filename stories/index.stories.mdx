@@ -1,0 +1,55 @@
+import { Story, Preview, Meta, Props, html } from '@open-wc/demoing-storybook';
+
+import '../api-authorization-method.js';
+
+<Meta 
+  title="ApiAuthorizationMethod"
+  parameters={{
+    component: "api-authorization-method",
+    options: { selectedPanel: "storybookjs/knobs/panel" }
+  }}
+/>
+
+# ApiAuthorizationMethod
+
+A component for...
+
+## Features:
+
+- a
+- b
+- ...
+
+## How to use
+
+### Installation
+
+```bash
+yarn add api-authorization-method
+```
+
+```js
+import 'api-authorization-method/api-authorization-method.js';
+```
+
+<Preview withToolbar>
+  <Story name="Simple">
+    {html`
+      <api-authorization-method></api-authorization-method>
+    `}
+  </Story>
+</Preview>
+
+## API
+
+<Props of="api-authorization-method" />
+
+## Variations
+
+###### Custom Title
+
+<Story name="Custom Title">
+  {html`
+    <api-authorization-method .title=${'Hello World'}></api-authorization-method>
+  `}
+</Story>

@@ -1,0 +1,102 @@
+#%RAML 1.0
+title: Oauth 2.0 example
+version: v1
+baseUri: http://domain.api.domain.com/{version}/
+
+annotationTypes:
+  oauth-2-custom-settings: !include oauth-2-custom-settings.raml
+
+securitySchemes:
+  oauth2Normal:
+    type: OAuth 2.0
+    displayName: Normal OAuth 2.0 definition
+    settings:
+      accessTokenUri: https://token.com
+      authorizationUri: https://auth.com
+      authorizationGrants: implicit
+      scopes: [profile, email]
+    describedBy:
+      queryParameters:
+        access_token:
+          type: string
+          description: Apply access token here.
+      headers:
+        Authorization:
+          type: string
+  oauth2:
+    type: OAuth 2.0
+    displayName: OAuth 2.0 with annotation
+    settings:
+      (oauth-2-custom-settings):
+        # ignoreDefaultGrants:
+        authorizationGrants: [annotated_custom_grant, annotated_custom_grant2]
+        authorizationSettings:
+          queryParameters:
+            resource:
+              type: string
+              required: true
+              description: |
+                A resource ID that defines a domain of authorization.
+              displayName: Hello query parameeter
+              default: default
+              examples:
+                named: named example value
+                otherExample: test example value
+              pattern: "[a-zA-Z]+"
+              maxLength: 12
+              minLength: 3
+            numericParam:
+              type: number
+              minimum: 10
+              maximum: 20
+              multipleOf: 2
+              format: float
+              required: false
+              example: 22
+            dateParam:
+              type: date-only
+              required: false
+            repetableParam1:
+              type: string[]
+              required: false
+            repetableParam2:
+              type: array
+              items: integer
+              required: false
+        accessTokenSettings:
+          queryParameters:
+            queryTokenResource: string
+            detailedTokenResource:
+              type: number
+              description: some description
+              required: false
+          headers:
+            x-token-resource:
+              type: number
+              default: 123
+          body:
+            bodyTokenResource: string
+            bodyDetailed:
+              type: boolean
+              required: true
+              displayName: Body detailed property
+              default: true
+      accessTokenUri: https://token.com
+      authorizationUri: https://auth.com
+      authorizationGrants: [authorization_code, password, client_credentials, implicit]
+      scopes: [profile, email]
+    describedBy:
+      queryParameters:
+        access_token:
+          type: string
+          description: Apply access token here.
+
+/oauth2:
+  post:
+    securedBy: [oauth2Normal]
+/with-annotations:
+  get:
+    securedBy: [oauth2]
+/optional-scheme:
+  put:
+    securedBy: [null, oauth2]
