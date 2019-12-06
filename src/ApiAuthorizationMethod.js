@@ -1,6 +1,9 @@
 import { AuthorizationMethod } from '@advanced-rest-client/authorization-method/src/AuthorizationMethod.js';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import { normalizeType } from '@advanced-rest-client/authorization-method/src/Utils.js';
+import {
+  normalizeType,
+  METHOD_OAUTH2,
+} from '@advanced-rest-client/authorization-method/src/Utils.js';
 import {
   CustomMethodMixin,
   initializeCustomModel,
@@ -9,11 +12,18 @@ import {
   serializeCustom,
   restoreCustom,
 } from './CustomMethodMixin.js';
+import {
+  ApiOauth2MethodMixin,
+  initializeOauth2Model,
+} from './ApiOauth2MethodMixin.js';
 import styles from './Styles.js';
 
 export const METHOD_CUSTOM = 'custom';
 
-export class ApiAuthorizationMethod extends AmfHelperMixin(CustomMethodMixin(AuthorizationMethod)) {
+export class ApiAuthorizationMethod extends AmfHelperMixin(
+  ApiOauth2MethodMixin(
+    CustomMethodMixin(AuthorizationMethod))) {
+
   get styles() {
     return [
       super.authStyles,
@@ -69,6 +79,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(CustomMethodMixin(Aut
     const type = normalizeType(this.type);
     switch (type) {
       case METHOD_CUSTOM: this[initializeCustomModel](); break;
+      case METHOD_OAUTH2: this[initializeOauth2Model](); break;
     }
   }
   /**
