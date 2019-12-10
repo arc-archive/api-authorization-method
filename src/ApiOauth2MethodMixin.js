@@ -2,7 +2,8 @@ import { html } from 'lit-element';
 import {
   oauth2GrantTypes,
   oauth2CustomPropertiesTemplate,
-  _serializeOauth2Auth,
+  autoHide,
+  serializeOauth2Auth,
 } from '@advanced-rest-client/authorization-method/src/Oauth2MethodMixin.js';
 import {
   notifyChange,
@@ -14,7 +15,6 @@ import '@anypoint-web-components/anypoint-button/anypoint-icon-button.js';
 import '@advanced-rest-client/arc-marked/arc-marked.js';
 
 export const initializeOauth2Model = Symbol();
-export const serializeOauth2Auth = _serializeOauth2Auth;
 const setupOAuthDeliveryMethod = Symbol();
 const getOauth2DeliveryMethod = Symbol();
 const updateGrantTypes = Symbol();
@@ -35,6 +35,10 @@ const templateForCustomArray = Symbol();
 const computeAuthCustomData = Symbol();
 const computeTokenCustomData = Symbol();
 const computeCustomParameters = Symbol();
+const authQueryParameters = Symbol();
+const tokenQueryParameters = Symbol();
+const tokenHeaders = Symbol();
+const tokenBody = Symbol();
 /**
  * Mixin that adds support for RAML's custom auth method computations
  *
@@ -76,12 +80,12 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       settings = settings[0];
     }
     this[preFillAmfData](settings);
-    // this._autoHide();
+    this[autoHide]();
     this.requestUpdate();
   }
 
-  [_serializeOauth2Auth]() {
-    const result = super[_serializeOauth2Auth]();
+  [serializeOauth2Auth]() {
+    const result = super[serializeOauth2Auth]();
     result.customData = {
       auth: {},
       token: {},
@@ -115,7 +119,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
    * by reference so no need for return value
    */
   [computeAuthCustomData](detail) {
-    const params = this._authQueryParameters;
+    const params = this[authQueryParameters];
     if (params) {
       detail.customData.auth.parameters =
       this[computeCustomParameters](params);
@@ -129,22 +133,20 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
    * by reference so no need for return value
    */
   [computeTokenCustomData](detail) {
-    const {
-      _tokenQueryParameters,
-      _tokenHeaders,
-      _tokenBody
-    } = this;
-    if (_tokenQueryParameters) {
+    const tqp = this[tokenQueryParameters];
+    const th = this[tokenHeaders];
+    const tb = this[tokenBody];
+    if (tqp) {
       detail.customData.token.parameters =
-        this[computeCustomParameters](_tokenQueryParameters);
+        this[computeCustomParameters](tqp);
     }
-    if (_tokenHeaders) {
+    if (th) {
       detail.customData.token.headers =
-        this[computeCustomParameters](_tokenHeaders);
+        this[computeCustomParameters](th);
     }
-    if (_tokenBody) {
+    if (tb) {
       detail.customData.token.body =
-        this[computeCustomParameters](_tokenBody);
+        this[computeCustomParameters](tb);
     }
   }
   /**
@@ -424,20 +426,20 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
    */
   [setupAnotationParameters](annotation) {
     /* istanbul ignore if */
-    if (this._authQueryParameters) {
-      this._authQueryParameters = undefined;
+    if (this[authQueryParameters]) {
+      this[authQueryParameters] = undefined;
     }
     /* istanbul ignore if */
-    if (this._tokenQueryParameters) {
-      this._tokenQueryParameters = undefined;
+    if (this[tokenQueryParameters]) {
+      this[tokenQueryParameters] = undefined;
     }
     /* istanbul ignore if */
-    if (this._tokenHeaders) {
-      this._tokenHeaders = undefined;
+    if (this[tokenHeaders]) {
+      this[tokenHeaders] = undefined;
     }
     /* istanbul ignore if */
-    if (this._tokenBody) {
-      this._tokenBody = undefined;
+    if (this[tokenBody]) {
+      this[tokenBody] = undefined;
     }
     /* istanbul ignore if */
     if (!annotation) {
@@ -487,7 +489,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     if (!model) {
       return;
     }
-    this._authQueryParameters = model;
+    this[authQueryParameters] = model;
   }
   /**
    * Sets up query parameters to be used with token request.
@@ -500,7 +502,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     if (!model) {
       return;
     }
-    this._tokenQueryParameters = model;
+    this[tokenQueryParameters] = model;
   }
   /**
    * Sets up headers to be used with token request.
@@ -513,7 +515,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     if (!model) {
       return;
     }
-    this._tokenHeaders = model;
+    this[tokenHeaders] = model;
   }
   /**
    * Sets up body parameters to be used with token request.
@@ -526,7 +528,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     if (!model) {
       return;
     }
-    this._tokenBody = model;
+    this[tokenBody] = model;
   }
   /**
    * Creats a form view model for type items.
@@ -565,13 +567,13 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
   [modelForCustomType](type) {
     let model;
     if (type === 'auth-query') {
-      model = this._authQueryParameters;
+      model = this[authQueryParameters];
     } else if (type === 'token-query') {
-      model = this._tokenQueryParameters;
+      model = this[tokenQueryParameters];
     } else if (type === 'token-headers') {
-      model = this._tokenHeaders;
+      model = this[tokenHeaders];
     } else {
-      model = this._tokenBody;
+      model = this[tokenBody];
     }
     return model;
   }
@@ -593,20 +595,23 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
   }
 
   [oauth2CustomPropertiesTemplate]() {
-    const { _authQueryParameters, _tokenQueryParameters, _tokenHeaders, _tokenBody } = this;
+    const aqp = this[authQueryParameters];
+    const tqp = this[tokenQueryParameters];
+    const th = this[tokenHeaders];
+    const tb = this[tokenBody];
     return html`
-    ${_authQueryParameters && _authQueryParameters.length ?
+    ${aqp && aqp.length ?
       html`<div class="subtitle">Authorization request query parameters</div>
-      ${this[templateForCustomArray](_authQueryParameters, 'auth-query')}` : ''}
-    ${_tokenQueryParameters && _tokenQueryParameters.length ?
+      ${this[templateForCustomArray](aqp, 'auth-query')}` : ''}
+    ${tqp && tqp.length ?
       html`<div class="subtitle">Token request query parameters</div>
-      ${this[templateForCustomArray](_tokenQueryParameters, 'token-query')}` : ''}
-    ${_tokenHeaders && _tokenHeaders.length ?
+      ${this[templateForCustomArray](tqp, 'token-query')}` : ''}
+    ${th && th.length ?
       html`<div class="subtitle">Token request headers</div>
-      ${this[templateForCustomArray](_tokenHeaders, 'token-headers')}` : ''}
-    ${_tokenBody && _tokenBody.length ?
+      ${this[templateForCustomArray](th, 'token-headers')}` : ''}
+    ${tb && tb.length ?
       html`<div class="subtitle">Token request body</div>
-      ${this[templateForCustomArray](_tokenBody, 'token-body')}` : ''}
+      ${this[templateForCustomArray](tb, 'token-body')}` : ''}
     `;
   }
 
@@ -631,15 +636,15 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
           data-index="${index}"
           @value-changed="${this._customValueChanged}"
         ></api-property-form-item>
-          ${item.hasDescription ? html`<anypoint-icon-button
-            class="hint-icon"
-            title="Toggle description"
-            aria-label="Press to toggle description"
-            data-type="${type}"
-            data-index="${index}"
-            @click="${this[toggleDocumentation]}">
-            <span class="icon">${help}</span>
-          </anypoint-icon-button>` : undefined}
+        ${item.hasDescription ? html`<anypoint-icon-button
+          class="hint-icon"
+          title="Toggle description"
+          aria-label="Press to toggle description"
+          data-type="${type}"
+          data-index="${index}"
+          @click="${this[toggleDocumentation]}">
+          <span class="icon">${help}</span>
+        </anypoint-icon-button>` : undefined}
       </div>
       ${item.hasDescription && item.docsOpened ? html`<div class="docs-container">
         <arc-marked .markdown="${item.description}" sanitize>

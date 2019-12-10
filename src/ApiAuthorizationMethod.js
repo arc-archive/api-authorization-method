@@ -15,8 +15,10 @@ import {
 import {
   ApiOauth2MethodMixin,
   initializeOauth2Model,
-  serializeOauth2Auth,
 } from './ApiOauth2MethodMixin.js';
+import {
+  serializeOauth2Auth,
+} from '@advanced-rest-client/authorization-method/src/Oauth2MethodMixin.js';
 import styles from './Styles.js';
 
 export const METHOD_CUSTOM = 'custom';

@@ -2,8 +2,6 @@ import { html, LitElement } from 'lit-element';
 import { ApiDemoPageBase } from '@advanced-rest-client/arc-demo-helper/ApiDemoPage.js';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import '@advanced-rest-client/arc-demo-helper/arc-interactive-demo.js';
-import '@anypoint-web-components/anypoint-radio-button/anypoint-radio-button.js';
-import '@anypoint-web-components/anypoint-radio-button/anypoint-radio-group.js';
 import '@advanced-rest-client/oauth-authorization/oauth2-authorization.js';
 import '@api-components/api-navigation/api-navigation.js';
 import '../api-authorization-method.js';
