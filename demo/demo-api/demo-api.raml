@@ -67,6 +67,21 @@ securitySchemes:
     settings:
       accessTokenUri: https://token.com
       authorizationUri: https://auth.com
+      scopes: [profile, email]
+    describedBy:
+      queryParameters:
+        access_token:
+          type: string
+          description: Apply access token here.
+      headers:
+        Authorization:
+          type: string
+  oauth2grants:
+    type: OAuth 2.0
+    displayName: Regular OAuth 2.0 definition
+    settings:
+      accessTokenUri: https://token.com
+      authorizationUri: https://auth.com
       authorizationGrants: implicit
       scopes: [profile, email]
     describedBy:
@@ -168,3 +183,6 @@ securitySchemes:
 /oauth2-with-annotations:
   get:
     securedBy: [oauth2Annotation]
+/oauth2-with-grans-list:
+  get:
+    securedBy: [oauth2grants]

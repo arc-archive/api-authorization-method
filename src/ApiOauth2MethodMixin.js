@@ -2,10 +2,19 @@ import { html } from 'lit-element';
 import {
   oauth2GrantTypes,
   oauth2CustomPropertiesTemplate,
+  _serializeOauth2Auth,
 } from '@advanced-rest-client/authorization-method/src/Oauth2MethodMixin.js';
+import {
+  notifyChange,
+} from '@advanced-rest-client/authorization-method/src/Utils.js';
+import { help } from '@advanced-rest-client/arc-icons/ArcIcons.js';
 import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
+import '@api-components/api-property-form-item/api-property-form-item.js';
+import '@anypoint-web-components/anypoint-button/anypoint-icon-button.js';
+import '@advanced-rest-client/arc-marked/arc-marked.js';
 
 export const initializeOauth2Model = Symbol();
+export const serializeOauth2Auth = _serializeOauth2Auth;
 const setupOAuthDeliveryMethod = Symbol();
 const getOauth2DeliveryMethod = Symbol();
 const updateGrantTypes = Symbol();
@@ -20,6 +29,12 @@ const setupTokenRequestHeaders = Symbol();
 const setupTokenRequestBody = Symbol();
 const createViewModel = Symbol();
 const computeGrantList = Symbol();
+const modelForCustomType = Symbol();
+const toggleDocumentation = Symbol();
+const templateForCustomArray = Symbol();
+const computeAuthCustomData = Symbol();
+const computeTokenCustomData = Symbol();
+const computeCustomParameters = Symbol();
 /**
  * Mixin that adds support for RAML's custom auth method computations
  *
@@ -62,6 +77,120 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     }
     this[preFillAmfData](settings);
     // this._autoHide();
+    this.requestUpdate();
+  }
+
+  [_serializeOauth2Auth]() {
+    const result = super[_serializeOauth2Auth]();
+    result.customData = {
+      auth: {},
+      token: {},
+    };
+    const { grantType } = result;
+    switch (grantType) {
+      case 'implicit':
+        this[computeAuthCustomData](result);
+        break;
+      case 'authorization_code':
+        this[computeAuthCustomData](result);
+        this[computeTokenCustomData](result);
+        break;
+      case 'client_credentials':
+      case 'password':
+        this[computeTokenCustomData](result);
+        break;
+      default:
+        this[computeAuthCustomData](result);
+        this[computeTokenCustomData](result);
+        break;
+    }
+    return result;
+  }
+
+  /**
+   * Adds `customData` property values that can be applied to the
+   * authorization request.
+   *
+   * @param {Object} detail Token request detail object. The object is passed
+   * by reference so no need for return value
+   */
+  [computeAuthCustomData](detail) {
+    const params = this._authQueryParameters;
+    if (params) {
+      detail.customData.auth.parameters =
+      this[computeCustomParameters](params);
+    }
+  }
+  /**
+   * Adds `customData` property values that can be applied to the
+   * token request.
+   *
+   * @param {Object} detail Token request detail object. The object is passed
+   * by reference so no need for return value
+   */
+  [computeTokenCustomData](detail) {
+    const {
+      _tokenQueryParameters,
+      _tokenHeaders,
+      _tokenBody
+    } = this;
+    if (_tokenQueryParameters) {
+      detail.customData.token.parameters =
+        this[computeCustomParameters](_tokenQueryParameters);
+    }
+    if (_tokenHeaders) {
+      detail.customData.token.headers =
+        this[computeCustomParameters](_tokenHeaders);
+    }
+    if (_tokenBody) {
+      detail.customData.token.body =
+        this[computeCustomParameters](_tokenBody);
+    }
+  }
+  /**
+   * Computes list of parameter values from current model.
+   *
+   * This function ignores empty values if they are not required.
+   * Required property are always included, even if the value is not set.
+   *
+   * @param {Array} params Model for form inputs.
+   * @return {Array|undefined} Array of objects with `name` and `value`
+   * properties or undefined if `params` is empty or no values are available.
+   */
+  [computeCustomParameters](params) {
+    if (!params || !params.length) {
+      return;
+    }
+    const result = [];
+    params.forEach((item) => {
+      const value = item.value;
+      if (!item.required) {
+        const type = typeof value;
+        if (type === 'number') {
+          if (!value && value !== 0) {
+            return;
+          }
+        } else if (type === 'string') {
+          if (!value) {
+            return;
+          }
+        } else if (value instanceof Array) {
+          if (!value[0]) {
+            return;
+          }
+        } else if (type === 'undefined') {
+          return;
+        }
+      }
+      result.push({
+        name: item.name,
+        value: item.value || ''
+      });
+    });
+    if (result.length === 0) {
+      return;
+    }
+    return result;
   }
 
   [setupOAuthDeliveryMethod](scheme) {
@@ -147,7 +276,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
    * @return {Array<Object>}
    */
   [computeGrantList](allowed) {
-    let defaults = oauth2GrantTypes;
+    let defaults = Array.from(oauth2GrantTypes);
     if (!allowed || !allowed.length) {
       return defaults;
     }
@@ -277,7 +406,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       return gransts;
     }
     const ignoreKey = d + 'ignoreDefaultGrants';
-    if (typeof annotation[ignoreKey] !== 'undefined') {
+    if (typeof annotation[this._getAmfKey(ignoreKey)] !== 'undefined') {
       gransts = [];
     }
     gransts = gransts.concat(addedGrants);
@@ -419,7 +548,104 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     return factory.modelForRawObject(param, modelOptions);
   }
 
+  _customValueChanged(e) {
+    const { target } = e;
+    const index = Number(target.dataset.index);
+    const type = target.dataset.type;
+    /* istanbul ignore if */
+    if (index !== index || !type) {
+      return;
+    }
+    const { value } = target;
+    const model = this[modelForCustomType](type);
+    model[index].value = value;
+    notifyChange(this);
+  }
+
+  [modelForCustomType](type) {
+    let model;
+    if (type === 'auth-query') {
+      model = this._authQueryParameters;
+    } else if (type === 'token-query') {
+      model = this._tokenQueryParameters;
+    } else if (type === 'token-headers') {
+      model = this._tokenHeaders;
+    } else {
+      model = this._tokenBody;
+    }
+    return model;
+  }
+
+  /**
+   * Toggles documentartion for custom property.
+   *
+   * @param {CustomEvent} e
+   */
+  [toggleDocumentation](e) {
+    const index = Number(e.currentTarget.dataset.index);
+    const type = e.currentTarget.dataset.type;
+    if (index !== index || !type) {
+      return;
+    }
+    const model = this[modelForCustomType](type);
+    model[index].docsOpened = !model[index].docsOpened;
+    this.requestUpdate();
+  }
+
   [oauth2CustomPropertiesTemplate]() {
-    return html`aaaaaaaaaaa`;
+    const { _authQueryParameters, _tokenQueryParameters, _tokenHeaders, _tokenBody } = this;
+    return html`
+    ${_authQueryParameters && _authQueryParameters.length ?
+      html`<div class="subtitle">Authorization request query parameters</div>
+      ${this[templateForCustomArray](_authQueryParameters, 'auth-query')}` : ''}
+    ${_tokenQueryParameters && _tokenQueryParameters.length ?
+      html`<div class="subtitle">Token request query parameters</div>
+      ${this[templateForCustomArray](_tokenQueryParameters, 'token-query')}` : ''}
+    ${_tokenHeaders && _tokenHeaders.length ?
+      html`<div class="subtitle">Token request headers</div>
+      ${this[templateForCustomArray](_tokenHeaders, 'token-headers')}` : ''}
+    ${_tokenBody && _tokenBody.length ?
+      html`<div class="subtitle">Token request body</div>
+      ${this[templateForCustomArray](_tokenBody, 'token-body')}` : ''}
+    `;
+  }
+
+  [templateForCustomArray](items, type) {
+    const {
+      outlined,
+      compatibility,
+      readOnly,
+      disabled,
+    } = this;
+    return items.map((item, index) => html`<div class="custom-data-field">
+      <div class="field-value">
+        <api-property-form-item
+          .model="${item}"
+          .value="${item.value}"
+          name="${item.name}"
+          ?readonly="${readOnly}"
+          ?outlined="${outlined}"
+          ?compatibility="${compatibility}"
+          ?disabled="${disabled}"
+          data-type="${type}"
+          data-index="${index}"
+          @value-changed="${this._customValueChanged}"
+        ></api-property-form-item>
+          ${item.hasDescription ? html`<anypoint-icon-button
+            class="hint-icon"
+            title="Toggle description"
+            aria-label="Press to toggle description"
+            data-type="${type}"
+            data-index="${index}"
+            @click="${this[toggleDocumentation]}">
+            <span class="icon">${help}</span>
+          </anypoint-icon-button>` : undefined}
+      </div>
+      ${item.hasDescription && item.docsOpened ? html`<div class="docs-container">
+        <arc-marked .markdown="${item.description}" sanitize>
+          <div slot="markdown-html" class="markdown-body"></div>
+        </arc-marked>
+      </div>` : ''}
+    </div>`);
   }
 }

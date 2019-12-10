@@ -15,6 +15,7 @@ import {
 import {
   ApiOauth2MethodMixin,
   initializeOauth2Model,
+  serializeOauth2Auth,
 } from './ApiOauth2MethodMixin.js';
 import styles from './Styles.js';
 
@@ -113,6 +114,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     const type = normalizeType(this.type);
     switch(type) {
       case METHOD_CUSTOM: return this[serializeCustom]();
+      case METHOD_OAUTH2: return this[serializeOauth2Auth]();
       default: return super.serialize();
     }
   }
