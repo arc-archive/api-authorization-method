@@ -13,6 +13,14 @@ import {
   restoreCustom,
 } from './CustomMethodMixin.js';
 import {
+  PassThroughMethodMixin,
+  renderPassThrough,
+  initializePassThroughModel,
+  restorePassThrough,
+  serializePassThrough,
+  validatePassThrough,
+} from './PassThroughMethodMixin.js';
+import {
   ApiOauth2MethodMixin,
   initializeOauth2Model,
 } from './ApiOauth2MethodMixin.js';
@@ -22,10 +30,12 @@ import {
 import styles from './Styles.js';
 
 export const METHOD_CUSTOM = 'custom';
+export const METHOD_PASS_THROUGH = 'pass through';
 
 export class ApiAuthorizationMethod extends AmfHelperMixin(
   ApiOauth2MethodMixin(
-    CustomMethodMixin(AuthorizationMethod))) {
+    CustomMethodMixin(
+      PassThroughMethodMixin(AuthorizationMethod)))) {
 
   get styles() {
     return [
@@ -83,6 +93,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     switch (type) {
       case METHOD_CUSTOM: this[initializeCustomModel](); break;
       case METHOD_OAUTH2: this[initializeOauth2Model](); break;
+      case METHOD_PASS_THROUGH: this[initializePassThroughModel](); break;
     }
   }
   /**
@@ -103,6 +114,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     const type = normalizeType(this.type);
     switch(type) {
       case METHOD_CUSTOM: return this[validateCustom]();
+      case METHOD_PASS_THROUGH: return this[validatePassThrough]();
       default: return super.validate();
     }
   }
@@ -117,6 +129,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     switch(type) {
       case METHOD_CUSTOM: return this[serializeCustom]();
       case METHOD_OAUTH2: return this[serializeOauth2Auth]();
+      case METHOD_PASS_THROUGH: return this[serializePassThrough]();
       default: return super.serialize();
     }
   }
@@ -132,6 +145,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     const type = normalizeType(this.type);
     switch(type) {
       case METHOD_CUSTOM: return this[restoreCustom](settings);
+      case METHOD_PASS_THROUGH: return this[restorePassThrough](settings);
       default: return super.restore(settings);
     }
   }
@@ -140,6 +154,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     const type = normalizeType(this.type);
     switch(type) {
       case METHOD_CUSTOM: return this[renderCustom]();
+      case METHOD_PASS_THROUGH: return this[renderPassThrough]();
       default: return super.render();
     }
   }

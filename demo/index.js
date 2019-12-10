@@ -44,7 +44,7 @@ class DemoPage extends ApiDemoPageBase {
     this._toggleMainOption = this._toggleMainOption.bind(this);
     this._toggleMainOption = this._toggleMainOption.bind(this);
     this._authTypeHandler = this._authTypeHandler.bind(this);
-    this._mainChnageHandler = this._mainChnageHandler.bind(this);
+    this._mainChangeHandler = this._mainChangeHandler.bind(this);
     this._basicChangeHandler = this._basicChangeHandler.bind(this);
     this._ntlmChangeHandler = this._ntlmChangeHandler.bind(this);
     this._digestChangeHandler = this._digestChangeHandler.bind(this);
@@ -90,6 +90,7 @@ class DemoPage extends ApiDemoPageBase {
 
   _navChanged(e) {
     const { selected, type } = e.detail;
+    this.mainChangesCounter = 0;
     if (type === 'method') {
       this.setData(selected);
       this.hasData = true;
@@ -141,8 +142,10 @@ class DemoPage extends ApiDemoPageBase {
     this[name] = value;
   }
 
-  _mainChnageHandler() {
+  _mainChangeHandler(e) {
     this.mainChangesCounter++;
+    const data = e.target.serialize();
+    console.log(data);
   }
 
   _basicChangeHandler() {
@@ -214,7 +217,7 @@ class DemoPage extends ApiDemoPageBase {
             .security="${security}"
             .amf="${amf}"
             slot="content"
-            @change="${this._mainChnageHandler}"
+            @change="${this._mainChangeHandler}"
           ></api-authorization-method>
 
           <label slot="options" id="listTypeLabel">Auth type</label>

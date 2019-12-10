@@ -51,7 +51,7 @@
     "@advanced-rest-client/authorization-method": "^0.1.2",
     "@anypoint-web-components/anypoint-button": "^1.0.15",
     "@api-components/amf-helper-mixin": "^4.0.15",
-    "@api-components/api-property-form-item": "^3.0.11",
+    "@api-components/api-property-form-item": "^3.0.12",
     "@api-components/api-view-model-transformer": "^4.0.2",
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0"

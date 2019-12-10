@@ -33,6 +33,10 @@ api-property-form-item {
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-size: var(--arc-font-subhead-font-size);
+  font-weight: var(--arc-font-subhead-font-weight);
+  line-height: var(--arc-font-subhead-line-height);
+  margin: 12px 8px;
 }
 
 .docs-container {

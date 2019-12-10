@@ -8,27 +8,31 @@ import {
   notifyChange,
 } from '@advanced-rest-client/authorization-method/src/Utils.js';
 
-export const initializeCustomModel = Symbol();
-export const renderCustom = Symbol();
-export const validateCustom = Symbol();
-export const serializeCustom = Symbol();
-export const restoreCustom = Symbol();
+const headersParam = Symbol();
+const queryParametersParam = Symbol();
 const createViewModel = Symbol();
 const readParamsProperties = Symbol();
+const inputHandler = Symbol();
 const headersTemplate = Symbol();
 const queryTemplate = Symbol();
 const formListTemplate = Symbol();
 const formItemTemplate = Symbol();
 const toggleDocumentation = Symbol();
-const inputHandler = Symbol();
+
+export const restorePassThrough = Symbol();
+export const serializePassThrough = Symbol();
+export const validatePassThrough = Symbol();
+export const initializePassThroughModel = Symbol();
+export const renderPassThrough = Symbol();
+
 /**
- * Mixin that adds support for RAML's custom auth method computations
+ * Mixin that adds support for RAML's Pass Through auth method computations
  *
  * @param {*} superClass
  * @return {*}
  * @mixin
  */
-export const CustomMethodMixin = (superClass) => class extends superClass {
+export const PassThroughMethodMixin = (superClass) => class extends superClass {
   get _transformer() {
     if (!this.__transformer) {
       this.__transformer = document.createElement('api-view-model-transformer');
@@ -47,15 +51,16 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
    * Restores previously serialized values
    * @param {Oauth2Params} settings
    */
-  [restoreCustom](settings) {
+  [restorePassThrough](settings) {
     if (!settings) {
       return;
     }
     // TODO: iterate over properties and restore values.
   }
 
-  [serializeCustom]() {
-    const { headers, queryParameters } = this;
+  [serializePassThrough]() {
+    const headers = this[headersParam];
+    const queryParameters = this[queryParametersParam];
     const result = {};
     if (headers && headers.length) {
       result.headers = {};
@@ -63,16 +68,16 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
     }
     if (queryParameters && queryParameters.length) {
       result.queryParameters = {};
-      queryParameters.forEach((parameter) => result.queryParameters[parameter.name] = parameter.value);
+      headers.forEach((parameter) => result.queryParameters[parameter.name] = parameter.value);
     }
     return result;
   }
 
-  [validateCustom]() {
+  [validatePassThrough]() {
     return true;
   }
 
-  [initializeCustomModel]() {
+  [initializePassThroughModel]() {
     const { security } = this;
     if (!this._hasType(security, this.ns.aml.vocabularies.security.ParametrizedSecurityScheme)) {
       return;
@@ -89,7 +94,7 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
       }
       type = this._getValue(scheme, this.ns.aml.vocabularies.security.type);
     }
-    if (!type || type.indexOf('x-') !== 0) {
+    if (!type || type.indexOf('Pass Through') !== 0) {
       return;
     }
     const hKey = this._getAmfKey(this.ns.aml.vocabularies.apiContract.header);
@@ -118,9 +123,9 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
       return;
     }
     if (type === 'header') {
-      this.headers = data;
+      this[headersParam] = data;
     } else if (type === 'parameter') {
-      this.queryParameters = data;
+      this[queryParametersParam] = data;
     }
     await this.updateComplete;
     notifyChange(this);
@@ -162,13 +167,13 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
     if (index !== index || !type) {
       return;
     }
-    const model = type === 'query' ? this.queryParameters : this.headers;
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
     const { value } = e.target;
     model[index].value = value;
     notifyChange(this);
   }
 
-  [renderCustom]() {
+  [renderPassThrough]() {
     const {
       styles,
       schemeName,
@@ -207,11 +212,11 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
   }
 
   [headersTemplate]() {
-    return this[formListTemplate](this.headers, 'header');
+    return this[formListTemplate](this[headersParam], 'header');
   }
 
   [queryTemplate]() {
-    return this[formListTemplate](this.queryParameters, 'query');
+    return this[formListTemplate](this[queryParametersParam], 'query');
   }
 
   [formListTemplate](items, type) {
@@ -231,7 +236,7 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
   }
 
   /**
-   * Renders a form input item.
+   * Renders a form input item
    *
    * @param {Object} item
    * @param {Number} index
@@ -243,6 +248,8 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
    * @return {TemplateResult}
    */
   [formItemTemplate](item, index, outlined, compatibility, readOnly, disabled, type) {
+    const docs = item.extendedDescription || item.description;
+    const hasDocs = !!docs;
     return html`<div class="field-value">
       <api-property-form-item
         .model="${item}"
@@ -267,8 +274,8 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
           <span class="icon">${help}</span>
         </anypoint-icon-button>` : undefined}
     </div>
-    ${item.hasDescription && item.docsOpened ? html`<div class="docs-container">
-      <arc-marked .markdown="${item.description}" sanitize>
+    ${hasDocs && item.docsOpened ? html`<div class="docs-container">
+      <arc-marked .markdown="${docs}" sanitize>
         <div slot="markdown-html" class="markdown-body"></div>
       </arc-marked>
     </div>` : ''}`;
@@ -285,7 +292,7 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
     if (index !== index || !type) {
       return;
     }
-    const model = type === 'query' ? this.queryParameters : this.headers;
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
     model[index].docsOpened = !model[index].docsOpened;
     this.requestUpdate();
   }
