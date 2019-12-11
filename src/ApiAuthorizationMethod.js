@@ -3,6 +3,7 @@ import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixi
 import {
   normalizeType,
   METHOD_OAUTH2,
+  METHOD_OAUTH1,
 } from '@advanced-rest-client/authorization-method/src/Utils.js';
 import {
   CustomMethodMixin,
@@ -19,7 +20,13 @@ import {
   restorePassThrough,
   serializePassThrough,
   validatePassThrough,
+  updateQueryParameterPassThrough,
+  updateHeaderPassThrough,
 } from './PassThroughMethodMixin.js';
+import {
+  ApiOauth1MethodMixin,
+  initializeOauth1Model,
+} from './ApiOauth1MethodMixin.js';
 import {
   ApiOauth2MethodMixin,
   initializeOauth2Model,
@@ -34,12 +41,13 @@ export const METHOD_PASS_THROUGH = 'pass through';
 
 export class ApiAuthorizationMethod extends AmfHelperMixin(
   ApiOauth2MethodMixin(
-    CustomMethodMixin(
-      PassThroughMethodMixin(AuthorizationMethod)))) {
+    ApiOauth1MethodMixin(
+      CustomMethodMixin(
+        PassThroughMethodMixin(AuthorizationMethod))))) {
 
   get styles() {
     return [
-      super.authStyles,
+      super.styles,
       styles,
     ];
   }
@@ -93,6 +101,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     switch (type) {
       case METHOD_CUSTOM: this[initializeCustomModel](); break;
       case METHOD_OAUTH2: this[initializeOauth2Model](); break;
+      case METHOD_OAUTH1: this[initializeOauth1Model](); break;
       case METHOD_PASS_THROUGH: this[initializePassThroughModel](); break;
     }
   }
@@ -156,6 +165,58 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
       case METHOD_CUSTOM: return this[renderCustom]();
       case METHOD_PASS_THROUGH: return this[renderPassThrough]();
       default: return super.render();
+    }
+  }
+  /**
+   * Updates, if applicable, query parameter value.
+   * This is supported for RAML's custom scheme and Pass Through
+   * that operates on query parameters model which is only an internal
+   * model.
+   *
+   * This does nothing if the query parameter has not been defined for current
+   * scheme.
+   *
+   * @param {String} name The name of the changed parameter
+   * @param {String} newValue A value to apply. May be empty but must be defined.
+   */
+  updateQueryParameter(name, newValue) {
+    if (newValue === null || newValue === undefined) {
+      newValue = '';
+    }
+    const type = normalizeType(this.type);
+    switch(type) {
+      case METHOD_CUSTOM:
+        // this[renderCustom](name, newValue);
+        break;
+      case METHOD_PASS_THROUGH:
+        this[updateQueryParameterPassThrough](name, newValue);
+        break;
+    }
+  }
+
+  /**
+   * Updates, if applicable, header value.
+   * This is supported for RAML's custom scheme and Pass Through
+   * that operates on headers model which is only an internal model.
+   *
+   * This does nothing if the header has not been defined for current
+   * scheme.
+   *
+   * @param {String} name The name of the changed header
+   * @param {String} newValue A value to apply. May be empty but must be defined.
+   */
+  updateHeader(name, newValue) {
+    if (newValue === null || newValue === undefined) {
+      newValue = '';
+    }
+    const type = normalizeType(this.type);
+    switch(type) {
+      case METHOD_CUSTOM:
+        // this[renderCustom](name, newValue);
+        break;
+      case METHOD_PASS_THROUGH:
+        this[updateHeaderPassThrough](name, newValue);
+        break;
     }
   }
 }

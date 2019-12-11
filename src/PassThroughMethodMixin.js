@@ -18,12 +18,19 @@ const queryTemplate = Symbol();
 const formListTemplate = Symbol();
 const formItemTemplate = Symbol();
 const toggleDocumentation = Symbol();
+const formItemHelpButtonTemplate = Symbol();
+const formItemHelpTemplate = Symbol();
+const titleTemplate = Symbol();
+const updateModelValue = Symbol();
+const restoreModelValue = Symbol();
 
 export const restorePassThrough = Symbol();
 export const serializePassThrough = Symbol();
 export const validatePassThrough = Symbol();
 export const initializePassThroughModel = Symbol();
 export const renderPassThrough = Symbol();
+export const updateQueryParameterPassThrough = Symbol();
+export const updateHeaderPassThrough = Symbol();
 
 /**
  * Mixin that adds support for RAML's Pass Through auth method computations
@@ -41,12 +48,49 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
   }
 
   disconnectedCallback() {
-    /* istanbul ignore else */
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
+    super.disconnectedCallback();
     this.__transformer = null;
   }
+
+  /**
+   * Updates query parameter value, if defined in the model.
+   * @param {String} name
+   * @param {String} newValue
+   */
+  [updateQueryParameterPassThrough](name, newValue) {
+    this[updateModelValue]('query', name, newValue);
+  }
+
+  /**
+   * Updates header value, if defined in the model.
+   * @param {String} name
+   * @param {String} newValue
+   */
+  [updateHeaderPassThrough](name, newValue) {
+    this[updateModelValue]('header', name, newValue);
+  }
+
+  /**
+   * Updates header or query parameters value, if defined in the model.
+   * @param {String} type
+   * @param {String} name
+   * @param {String} newValue
+   */
+  [updateModelValue](type, name, newValue) {
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
+    if (!model || !model.length) {
+      return;
+    }
+    for (let i = 0, len = model.length; i < len; i++) {
+      const item = model[i];
+      if (item.name === name) {
+        item.value = newValue;
+        this.requestUpdate();
+        return;
+      }
+    }
+  }
+
   /**
    * Restores previously serialized values
    * @param {Oauth2Params} settings
@@ -55,20 +99,40 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
     if (!settings) {
       return;
     }
-    // TODO: iterate over properties and restore values.
+    this[restoreModelValue]('headers', settings.headers);
+    this[restoreModelValue]('query', settings.queryParameters);
+    this.requestUpdate();
+  }
+
+  [restoreModelValue](type, restored) {
+    if (!restored) {
+      return;
+    }
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
+    if (!model && !model.length) {
+      return;
+    }
+    Object.keys(restored).forEach((name) => {
+      const item = model.find((item) => item.name === name);
+      if (item) {
+        item.value = restored[name];
+      }
+    });
   }
 
   [serializePassThrough]() {
     const headers = this[headersParam];
     const queryParameters = this[queryParametersParam];
     const result = {};
+    // Note, in API model, headers and params are unique. They may have array
+    // value but they are always qunique.
     if (headers && headers.length) {
       result.headers = {};
       headers.forEach((header) => result.headers[header.name] = header.value);
     }
     if (queryParameters && queryParameters.length) {
       result.queryParameters = {};
-      headers.forEach((parameter) => result.queryParameters[parameter.name] = parameter.value);
+      queryParameters.forEach((parameter) => result.queryParameters[parameter.name] = parameter.value);
     }
     return result;
   }
@@ -176,49 +240,78 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
   [renderPassThrough]() {
     const {
       styles,
-      schemeName,
-      schemeDescription,
-      compatibility,
-      outlined,
-      descriptionOpened,
     } = this;
     return html`
     <style>${styles}</style>
-    ${schemeName ? html`<div class="scheme-header">
-        <div class="subtitle">
-          <span>Scheme: ${schemeName}</span>
-          ${schemeDescription ? html`<anypoint-icon-button
-            class="hint-icon"
-            title="Toggle description"
-            aria-label="Activate to toggle the description"
-            ?outlined="${outlined}"
-            ?compatibility="${compatibility}"
-            @click="${this.toggleDescription}"
-          >
-            <span class="icon">${help}</span>
-          </anypoint-icon-button>` : ''}
-        </div>
-        ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
-          <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
-            <div slot="markdown-html" class="markdown-body"></div>
-          </arc-marked>
-        </div>` : ''}
-      </div>` : ''}
-    <form autocomplete="on" class="custom-auth">
+    ${this[titleTemplate]()}
+    <form autocomplete="on" class="passthrough-auth">
       ${this[headersTemplate]()}
       ${this[queryTemplate]()}
     </form>
     `;
   }
 
+  [titleTemplate]() {
+    const {
+      schemeName,
+      schemeDescription,
+      compatibility,
+      outlined,
+      descriptionOpened,
+    } = this;
+    if (!schemeName) {
+      return '';
+    }
+    return html`
+    <div class="scheme-header">
+      <div class="subtitle">
+        <span>Scheme: ${schemeName}</span>
+        ${schemeDescription ? html`<anypoint-icon-button
+          class="hint-icon"
+          title="Toggle description"
+          aria-label="Activate to toggle the description"
+          ?outlined="${outlined}"
+          ?compatibility="${compatibility}"
+          @click="${this.toggleDescription}"
+        >
+          <span class="icon">${help}</span>
+        </anypoint-icon-button>` : ''}
+      </div>
+      ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
+        <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
+          <div slot="markdown-html" class="markdown-body"></div>
+        </arc-marked>
+      </div>` : ''}
+    </div>`;
+  }
+
   [headersTemplate]() {
-    return this[formListTemplate](this[headersParam], 'header');
+    let result = this[formListTemplate](this[headersParam], 'header');
+    if (result !== '') {
+      result = html`
+      <label class="section-title">Headers</label>
+      ${result}
+      `;
+    }
+    return result;
   }
 
   [queryTemplate]() {
-    return this[formListTemplate](this[queryParametersParam], 'query');
+    let result = this[formListTemplate](this[queryParametersParam], 'query');
+    if (result !== '') {
+      result = html`
+      <label class="section-title">Query parameters</label>
+      ${result}
+      `;
+    }
+    return result;
   }
-
+  /**
+   * Returns a TemplateResult for form items.
+   * @param {Array<Object>} items List of form items to render
+   * @param {String} type Items type. Either `query` or `header`
+   * @return {TemplateResult}
+   */
   [formListTemplate](items, type) {
     if (!items || !items.length) {
       return '';
@@ -236,7 +329,7 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
   }
 
   /**
-   * Renders a form input item
+   * Returns a TemplateResult for a form input item
    *
    * @param {Object} item
    * @param {Number} index
@@ -250,7 +343,8 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
   [formItemTemplate](item, index, outlined, compatibility, readOnly, disabled, type) {
     const docs = item.extendedDescription || item.description;
     const hasDocs = !!docs;
-    return html`<div class="field-value">
+    return html`
+    <div class="field-value">
       <api-property-form-item
         .model="${item}"
         .value="${item.value}"
@@ -263,22 +357,49 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
         data-index="${index}"
         @input="${this[inputHandler]}"
       ></api-property-form-item>
-        ${item.hasDescription ? html`<anypoint-icon-button
-          class="hint-icon"
-          title="Toggle description"
-          aria-label="Press to toggle description"
-          data-type="${type}"
-          data-index="${index}"
-          @click="${this[toggleDocumentation]}"
-        >
-          <span class="icon">${help}</span>
-        </anypoint-icon-button>` : undefined}
+      ${this[formItemHelpButtonTemplate](hasDocs, type, index)}
     </div>
-    ${hasDocs && item.docsOpened ? html`<div class="docs-container">
+    ${this[formItemHelpTemplate](hasDocs, item.docsOpened, docs)}`;
+  }
+  /**
+   * Returns a TemplateResult for docs toggle icon for a form item when the item has docs.
+   * @param {Boolean} hasDocs
+   * @param {String} type
+   * @param {Number} index
+   * @return {TemplateResult}
+   */
+  [formItemHelpButtonTemplate](hasDocs, type, index) {
+    if (!hasDocs) {
+      return '';
+    }
+    return html`<anypoint-icon-button
+      class="hint-icon"
+      title="Toggle description"
+      aria-label="Press to toggle description"
+      data-type="${type}"
+      data-index="${index}"
+      @click="${this[toggleDocumentation]}"
+    >
+      <span class="icon">${help}</span>
+    </anypoint-icon-button>`;
+  }
+  /**
+   * Returns a TemplateResult for docs for a form item when the item has docs and is opened.
+   * @param {Boolean} hasDocs
+   * @param {Boolean} opened
+   * @param {String} docs
+   * @return {TemplateResult}
+   */
+  [formItemHelpTemplate](hasDocs, opened, docs) {
+    if (!hasDocs || !opened) {
+      return '';
+    }
+    return html`
+    <div class="docs-container">
       <arc-marked .markdown="${docs}" sanitize>
         <div slot="markdown-html" class="markdown-body"></div>
       </arc-marked>
-    </div>` : ''}`;
+    </div>`;
   }
 
   /**

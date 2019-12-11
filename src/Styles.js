@@ -4,19 +4,6 @@ export default css`
   display: block;
 }
 
-[hidden] {
-  display: none !important;
-}
-
-anypoint-input,
-anypoint-masked-input {
-  width: auto;
-}
-
-api-property-form-item {
-  margin: -8px 0px;
-}
-
 .field-value {
   display: flex;
   flex-direction: row;
@@ -33,9 +20,10 @@ api-property-form-item {
   display: flex;
   flex-direction: row;
   align-items: center;
-  font-size: var(--arc-font-subhead-font-size);
-  font-weight: var(--arc-font-subhead-font-weight);
-  line-height: var(--arc-font-subhead-line-height);
+  margin: 12px 8px;
+}
+
+.section-title {
   margin: 12px 8px;
 }
 
@@ -43,32 +31,8 @@ api-property-form-item {
   margin-top: 8px;
 }
 
-.markdown-body,
-.docs-container {
-  font-size: var(--arc-font-body1-font-size);
-  font-weight: var(--arc-font-body1-font-weight);
-  line-height: var(--arc-font-body1-line-height);
-  color: var(--inline-documentation-color, rgba(0, 0, 0, 0.87));
-}
-
 arc-marked {
   background-color: var(--inline-documentation-background-color, #FFF3E0);
   padding: 4px;
 }
-
-.markdown-body p:first-child {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-.markdown-body p:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.icon {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-}`;
+`;

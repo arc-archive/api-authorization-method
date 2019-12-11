@@ -13,6 +13,8 @@ export const renderCustom = Symbol();
 export const validateCustom = Symbol();
 export const serializeCustom = Symbol();
 export const restoreCustom = Symbol();
+export const updateQueryParameterCustom = Symbol();
+export const updateHeaderCustom = Symbol();
 const createViewModel = Symbol();
 const readParamsProperties = Symbol();
 const headersTemplate = Symbol();
@@ -20,7 +22,14 @@ const queryTemplate = Symbol();
 const formListTemplate = Symbol();
 const formItemTemplate = Symbol();
 const toggleDocumentation = Symbol();
+const formItemHelpButtonTemplate = Symbol();
+const formItemHelpTemplate = Symbol();
 const inputHandler = Symbol();
+const headersParam = Symbol();
+const queryParametersParam = Symbol();
+const titleTemplate = Symbol();
+const updateModelValue = Symbol();
+const restoreModelValue = Symbol();
 /**
  * Mixin that adds support for RAML's custom auth method computations
  *
@@ -37,12 +46,49 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
   }
 
   disconnectedCallback() {
-    /* istanbul ignore else */
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
+    super.disconnectedCallback();
     this.__transformer = null;
   }
+
+  /**
+   * Updates query parameter value, if defined in the model.
+   * @param {String} name
+   * @param {String} newValue
+   */
+  [updateQueryParameterCustom](name, newValue) {
+    this[updateModelValue]('query', name, newValue);
+  }
+
+  /**
+   * Updates header value, if defined in the model.
+   * @param {String} name
+   * @param {String} newValue
+   */
+  [updateHeaderCustom](name, newValue) {
+    this[updateModelValue]('header', name, newValue);
+  }
+
+  /**
+   * Updates header or query parameters value, if defined in the model.
+   * @param {String} type
+   * @param {String} name
+   * @param {String} newValue
+   */
+  [updateModelValue](type, name, newValue) {
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
+    if (!model || !model.length) {
+      return;
+    }
+    for (let i = 0, len = model.length; i < len; i++) {
+      const item = model[i];
+      if (item.name === name) {
+        item.value = newValue;
+        this.requestUpdate();
+        return;
+      }
+    }
+  }
+
   /**
    * Restores previously serialized values
    * @param {Oauth2Params} settings
@@ -51,12 +97,33 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
     if (!settings) {
       return;
     }
-    // TODO: iterate over properties and restore values.
+    this[restoreModelValue]('headers', settings.headers);
+    this[restoreModelValue]('query', settings.queryParameters);
+    this.requestUpdate();
+  }
+
+  [restoreModelValue](type, restored) {
+    if (!restored) {
+      return;
+    }
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
+    if (!model && !model.length) {
+      return;
+    }
+    Object.keys(restored).forEach((name) => {
+      const item = model.find((item) => item.name === name);
+      if (item) {
+        item.value = restored[name];
+      }
+    });
   }
 
   [serializeCustom]() {
-    const { headers, queryParameters } = this;
+    const headers = this[headersParam];
+    const queryParameters = this[queryParametersParam];
     const result = {};
+    // Note, in API model, headers and params are unique. They may have array
+    // value but they are always qunique.
     if (headers && headers.length) {
       result.headers = {};
       headers.forEach((header) => result.headers[header.name] = header.value);
@@ -118,9 +185,9 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
       return;
     }
     if (type === 'header') {
-      this.headers = data;
+      this[headersParam] = data;
     } else if (type === 'parameter') {
-      this.queryParameters = data;
+      this[queryParametersParam] = data;
     }
     await this.updateComplete;
     notifyChange(this);
@@ -162,7 +229,7 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
     if (index !== index || !type) {
       return;
     }
-    const model = type === 'query' ? this.queryParameters : this.headers;
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
     const { value } = e.target;
     model[index].value = value;
     notifyChange(this);
@@ -171,34 +238,10 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
   [renderCustom]() {
     const {
       styles,
-      schemeName,
-      schemeDescription,
-      compatibility,
-      outlined,
-      descriptionOpened,
     } = this;
     return html`
     <style>${styles}</style>
-    ${schemeName ? html`<div class="scheme-header">
-        <div class="subtitle">
-          <span>Scheme: ${schemeName}</span>
-          ${schemeDescription ? html`<anypoint-icon-button
-            class="hint-icon"
-            title="Toggle description"
-            aria-label="Activate to toggle the description"
-            ?outlined="${outlined}"
-            ?compatibility="${compatibility}"
-            @click="${this.toggleDescription}"
-          >
-            <span class="icon">${help}</span>
-          </anypoint-icon-button>` : ''}
-        </div>
-        ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
-          <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
-            <div slot="markdown-html" class="markdown-body"></div>
-          </arc-marked>
-        </div>` : ''}
-      </div>` : ''}
+    ${this[titleTemplate]()}
     <form autocomplete="on" class="custom-auth">
       ${this[headersTemplate]()}
       ${this[queryTemplate]()}
@@ -206,14 +249,68 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
     `;
   }
 
+  [titleTemplate]() {
+    const {
+      schemeName,
+      schemeDescription,
+      compatibility,
+      outlined,
+      descriptionOpened,
+    } = this;
+    if (!schemeName) {
+      return '';
+    }
+    return html`
+    <div class="scheme-header">
+      <div class="subtitle">
+        <span>Scheme: ${schemeName}</span>
+        ${schemeDescription ? html`<anypoint-icon-button
+          class="hint-icon"
+          title="Toggle description"
+          aria-label="Activate to toggle the description"
+          ?outlined="${outlined}"
+          ?compatibility="${compatibility}"
+          @click="${this.toggleDescription}"
+        >
+          <span class="icon">${help}</span>
+        </anypoint-icon-button>` : ''}
+      </div>
+      ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
+        <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
+          <div slot="markdown-html" class="markdown-body"></div>
+        </arc-marked>
+      </div>` : ''}
+    </div>`;
+  }
+
   [headersTemplate]() {
-    return this[formListTemplate](this.headers, 'header');
+    let result = this[formListTemplate](this[headersParam], 'header');
+    if (result !== '') {
+      result = html`
+      <label class="section-title">Headers</label>
+      ${result}
+      `;
+    }
+    return result;
   }
 
   [queryTemplate]() {
-    return this[formListTemplate](this.queryParameters, 'query');
+    let result = this[formListTemplate](this[queryParametersParam], 'query');
+    if (result !== '') {
+      result = html`
+      <label class="section-title">Query parameters</label>
+      ${result}
+      `;
+    }
+    return result;
   }
 
+  /**
+   * Returns a TemplateResult for form items.
+   * @param {Array<Object>} items List of form items to render
+   * @param {String} type Items type. Either `query` or `header`
+   * @return {TemplateResult}
+   */
   [formListTemplate](items, type) {
     if (!items || !items.length) {
       return '';
@@ -231,7 +328,7 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
   }
 
   /**
-   * Renders a form input item.
+   * Returns a TemplateResult for a form input item
    *
    * @param {Object} item
    * @param {Number} index
@@ -243,6 +340,8 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
    * @return {TemplateResult}
    */
   [formItemTemplate](item, index, outlined, compatibility, readOnly, disabled, type) {
+    const docs = item.extendedDescription || item.description;
+    const hasDocs = !!docs;
     return html`<div class="field-value">
       <api-property-form-item
         .model="${item}"
@@ -256,22 +355,50 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
         data-index="${index}"
         @input="${this[inputHandler]}"
       ></api-property-form-item>
-        ${item.hasDescription ? html`<anypoint-icon-button
-          class="hint-icon"
-          title="Toggle description"
-          aria-label="Press to toggle description"
-          data-type="${type}"
-          data-index="${index}"
-          @click="${this[toggleDocumentation]}"
-        >
-          <span class="icon">${help}</span>
-        </anypoint-icon-button>` : undefined}
+      ${this[formItemHelpButtonTemplate](hasDocs, type, index)}
     </div>
-    ${item.hasDescription && item.docsOpened ? html`<div class="docs-container">
-      <arc-marked .markdown="${item.description}" sanitize>
+    ${this[formItemHelpTemplate](hasDocs, item.docsOpened, docs)}`;
+  }
+
+  /**
+   * Returns a TemplateResult for docs toggle icon for a form item when the item has docs.
+   * @param {Boolean} hasDocs
+   * @param {String} type
+   * @param {Number} index
+   * @return {TemplateResult}
+   */
+  [formItemHelpButtonTemplate](hasDocs, type, index) {
+    if (!hasDocs) {
+      return '';
+    }
+    return html`<anypoint-icon-button
+      class="hint-icon"
+      title="Toggle description"
+      aria-label="Press to toggle description"
+      data-type="${type}"
+      data-index="${index}"
+      @click="${this[toggleDocumentation]}"
+    >
+      <span class="icon">${help}</span>
+    </anypoint-icon-button>`;
+  }
+  /**
+   * Returns a TemplateResult for docs for a form item when the item has docs and is opened.
+   * @param {Boolean} hasDocs
+   * @param {Boolean} opened
+   * @param {String} docs
+   * @return {TemplateResult}
+   */
+  [formItemHelpTemplate](hasDocs, opened, docs) {
+    if (!hasDocs || !opened) {
+      return '';
+    }
+    return html`
+    <div class="docs-container">
+      <arc-marked .markdown="${docs}" sanitize>
         <div slot="markdown-html" class="markdown-body"></div>
       </arc-marked>
-    </div>` : ''}`;
+    </div>`;
   }
 
   /**
@@ -285,7 +412,7 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
     if (index !== index || !type) {
       return;
     }
-    const model = type === 'query' ? this.queryParameters : this.headers;
+    const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
     model[index].docsOpened = !model[index].docsOpened;
     this.requestUpdate();
   }
