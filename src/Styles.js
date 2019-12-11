@@ -28,7 +28,7 @@ api-property-form-item {
 }
 
 .docs-container {
-  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 arc-marked {

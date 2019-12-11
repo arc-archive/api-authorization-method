@@ -140,6 +140,10 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
   }
 
   [initializeCustomModel]() {
+    this.schemeName = undefined;
+    this.schemeDescription = undefined;
+    this[headersParam] = undefined;
+    this[queryParametersParam] = undefined;
     const { security } = this;
     if (!this._hasType(security, this.ns.aml.vocabularies.security.ParametrizedSecurityScheme)) {
       return;
@@ -261,26 +265,24 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
       return '';
     }
     return html`
-    <div class="scheme-header">
-      <div class="subtitle">
-        <span>Scheme: ${schemeName}</span>
-        ${schemeDescription ? html`<anypoint-icon-button
-          class="hint-icon"
-          title="Toggle description"
-          aria-label="Activate to toggle the description"
-          ?outlined="${outlined}"
-          ?compatibility="${compatibility}"
-          @click="${this.toggleDescription}"
-        >
-          <span class="icon">${help}</span>
-        </anypoint-icon-button>` : ''}
-      </div>
-      ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
-        <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
-          <div slot="markdown-html" class="markdown-body"></div>
-        </arc-marked>
-      </div>` : ''}
-    </div>`;
+    <div class="subtitle">
+      <span>Scheme: ${schemeName}</span>
+      ${schemeDescription ? html`<anypoint-icon-button
+        class="hint-icon"
+        title="Toggle description"
+        aria-label="Activate to toggle the description"
+        ?outlined="${outlined}"
+        ?compatibility="${compatibility}"
+        @click="${this.toggleDescription}"
+      >
+        <span class="icon">${help}</span>
+      </anypoint-icon-button>` : ''}
+    </div>
+    ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
+      <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
+        <div slot="markdown-html" class="markdown-body"></div>
+      </arc-marked>
+    </div>` : ''}`;
   }
 
   [headersTemplate]() {
