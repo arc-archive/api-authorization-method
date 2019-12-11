@@ -11,13 +11,17 @@ This element adds support for the following security description:
 
 -   OAuth 2
 -   OAuth 2 with annotation (see [RAML's docs](https://github.com/raml-org/raml-annotations/tree/master/annotations/security-schemes))
--   OAuth 1 (in progress)
+-   OAuth 1
 -   RAML's custom scheme
 -   Pass Through
 
 Not supported:
 
 -   OAS' API key - AMF model does not produce correct model for union of two or more API Key methods. API Key will be implemented when AMF fixes this issue.
+
+To do:
+
+-   Tests
 
 ## Usage
 
