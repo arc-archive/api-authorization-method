@@ -166,6 +166,7 @@ securitySchemes:
         access_token:
           type: string
           description: Apply access token here.
+  oauth1: !include oauth_1_0.raml
 /basic:
   get:
     securedBy: basic
@@ -193,3 +194,6 @@ securitySchemes:
 /oauth2-with-grans-list:
   get:
     securedBy: [oauth2grants]
+/oauth1:
+  get:
+    securedBy: [oauth1]

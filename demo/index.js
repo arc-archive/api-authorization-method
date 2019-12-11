@@ -80,6 +80,7 @@ class DemoPage extends ApiDemoPageBase {
       case 'Digest Authentication': return 'digest';
       case 'Pass Through': return 'pass through';
       case 'OAuth 2.0': return 'oauth 2';
+      case 'OAuth 1.0': return 'oauth 1';
       default:
         if (String(securityType).indexOf('x-') === 0) {
           return 'custom';
