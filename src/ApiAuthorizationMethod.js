@@ -12,6 +12,8 @@ import {
   validateCustom,
   serializeCustom,
   restoreCustom,
+  updateQueryParameterCustom,
+  updateHeaderCustom,
 } from './CustomMethodMixin.js';
 import {
   PassThroughMethodMixin,
@@ -186,7 +188,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     const type = normalizeType(this.type);
     switch(type) {
       case METHOD_CUSTOM:
-        // this[renderCustom](name, newValue);
+        this[updateQueryParameterCustom](name, newValue);
         break;
       case METHOD_PASS_THROUGH:
         this[updateQueryParameterPassThrough](name, newValue);
@@ -212,7 +214,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     const type = normalizeType(this.type);
     switch(type) {
       case METHOD_CUSTOM:
-        // this[renderCustom](name, newValue);
+        this[updateHeaderCustom](name, newValue);
         break;
       case METHOD_PASS_THROUGH:
         this[updateHeaderPassThrough](name, newValue);
