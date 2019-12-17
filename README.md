@@ -1,5 +1,3 @@
-> This component is a work in progress. No version has been published so far.
-
 # api-authorization-method
 
 A web component that extends `@advanced-rest-client/authorization-method` to add ability to read API security configuration to apply to currently selected type.
@@ -18,10 +16,6 @@ This element adds support for the following security description:
 Not supported:
 
 -   OAS' API key - AMF model does not produce correct model for union of two or more API Key methods. API Key will be implemented when AMF fixes this issue.
-
-To do:
-
--   Tests
 
 ## Usage
 
