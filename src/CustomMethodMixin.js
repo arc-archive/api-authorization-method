@@ -136,7 +136,16 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
   }
 
   [validateCustom]() {
-    return true;
+    const nodes = this.shadowRoot.querySelectorAll('api-property-form-item');
+    let validationResult = true;
+    for (let i = 0, len = nodes.length; i < len; i++) {
+      const node = nodes[i];
+      const result = node.validate();
+      if (validationResult && !result) {
+        validationResult = result;
+      }
+    }
+    return validationResult;
   }
 
   [initializeCustomModel]() {
