@@ -4,10 +4,10 @@ import * as sinon from 'sinon';
 import * as MockInteractions from '@polymer/iron-test-helpers/mock-interactions.js';
 import '../api-authorization-method.js';
 
-describe('RAML custom scheme', function() {
+describe('Pass Through authorization', function() {
   async function basicFixture(amf, security) {
     return (await fixture(html`<api-authorization-method
-      type="custom"
+      type="Pass Through"
       .amf="${amf}"
       .security="${security}"
     ></api-authorization-method>`));
@@ -27,35 +27,13 @@ describe('RAML custom scheme', function() {
     describe(label, () => {
       describe('initialization', () => {
         let amf;
-        let factory;
-
         before(async () => {
           amf = await AmfLoader.load({ compact });
-          factory = document.createElement('api-view-model-transformer');
-        });
-
-        after(() => {
-          factory = null;
-        });
-
-        afterEach(() => {
-          factory.clearCache();
-        });
-
-        it('can be initialized with document.createElement', () => {
-          const element = document.createElement('api-authorization-method');
-          assert.ok(element);
         });
 
         it('can be initialized in a template with model', async () => {
-          const security = AmfLoader.lookupSecurity(amf, '/custom2', 'get');
+          const security = AmfLoader.lookupSecurity(amf, '/passthrough', 'get');
           const element = await basicFixture(amf, security);
-          await aTimeout();
-          assert.ok(element);
-        });
-
-        it('can be initialized in a template without the model', async () => {
-          const element = await basicFixture();
           await aTimeout();
           assert.ok(element);
         });
@@ -79,26 +57,26 @@ describe('RAML custom scheme', function() {
         });
 
         it('renders headers', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const nodes = element.shadowRoot.querySelectorAll(`api-property-form-item[data-type="header"]`);
           assert.lengthOf(nodes, 1);
         });
 
         it('renders query parameters', async () => {
-          const element = await modelFixture(amf, '/custom2', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const nodes = element.shadowRoot.querySelectorAll(`api-property-form-item[data-type="query"]`);
           assert.lengthOf(nodes, 2);
         });
 
         it('renders scheme title', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const node = element.shadowRoot.querySelector(`.subtitle`);
           const result = node.textContent.trim();
-          assert.equal(result, 'Scheme: custom1');
+          assert.equal(result, 'Scheme: passthrough');
         });
 
         it('renders scheme dosc toggle button', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const node = element.shadowRoot.querySelector(`.subtitle .hint-icon`);
           assert.ok(node);
         });
@@ -128,14 +106,14 @@ describe('RAML custom scheme', function() {
         });
 
         it('does not render scheme description by default', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const node = element.shadowRoot.querySelector(`.subtitle`);
           const next = node.nextElementSibling;
           assert.equal(next.localName, 'form');
         });
 
         it('renders scheme description after activation', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const button = element.shadowRoot.querySelector(`.subtitle .hint-icon`);
           MockInteractions.tap(button);
           await nextFrame();
@@ -145,14 +123,14 @@ describe('RAML custom scheme', function() {
         });
 
         it('does not render field description by default', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const node = element.shadowRoot.querySelector(`.field-value`);
           const next = node.nextElementSibling;
           assert.isFalse(next.classList.contains('docs-container'));
         });
 
         it('renders field description for headers', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const button = element.shadowRoot.querySelector('.hint-icon[data-type="header"]');
           MockInteractions.tap(button);
           await nextFrame();
@@ -161,7 +139,7 @@ describe('RAML custom scheme', function() {
         });
 
         it('renders field description for query parameters', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const button = element.shadowRoot.querySelector('.hint-icon[data-type="query"]');
           MockInteractions.tap(button);
           await nextFrame();
@@ -188,8 +166,8 @@ describe('RAML custom scheme', function() {
         });
 
         it('notifies when value change', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
-          const input = element.shadowRoot.querySelector(`[name="SpecialTokenHeader"]`);
+          const element = await modelFixture(amf, '/passthrough', 'get');
+          const input = element.shadowRoot.querySelector(`[name="api_key"]`);
           input.value = 'test';
           const spy = sinon.spy();
           element.addEventListener('change', spy);
@@ -198,7 +176,7 @@ describe('RAML custom scheme', function() {
         });
 
         it('notifies when selection change', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const input = element.shadowRoot.querySelector(`[name="debugTokenParam"]`);
           const option = input.shadowRoot.querySelector(`[data-value="Log"]`);
           const spy = sinon.spy();
@@ -208,7 +186,7 @@ describe('RAML custom scheme', function() {
         });
 
         it('notifies when AMF model change', async () => {
-          const security = AmfLoader.lookupSecurity(amf, '/custom1', 'get');
+          const security = AmfLoader.lookupSecurity(amf, '/passthrough', 'get');
           const element = await basicFixture(amf);
           element.security = security;
           const spy = sinon.spy();
@@ -236,29 +214,22 @@ describe('RAML custom scheme', function() {
         });
 
         it('updates query parameter value', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           element.updateQueryParameter('debugTokenParam', 'Log');
           const result = element.serialize();
           assert.equal(result.queryParameters.debugTokenParam, 'Log');
         });
 
-        it('updates boolean value', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
-          element.updateQueryParameter('booleanTokenParam', 'false');
-          const result = element.serialize();
-          assert.equal(result.queryParameters.booleanTokenParam, 'false');
-        });
-
         it('updates string value', async () => {
-          const element = await modelFixture(amf, '/custom2', 'get');
-          element.updateQueryParameter('apiNonceParam', 'test');
+          const element = await modelFixture(amf, '/passthrough', 'get');
+          element.updateQueryParameter('query', 'test');
           const result = element.serialize();
-          assert.equal(result.queryParameters.apiNonceParam, 'test');
+          assert.equal(result.queryParameters.query, 'test');
         });
 
         it('ignores when no model', async () => {
           const element = await basicFixture(amf);
-          element.updateQueryParameter('apiNonceParam', 'test');
+          element.updateQueryParameter('query', 'test');
           // no error
         });
       });
@@ -281,15 +252,15 @@ describe('RAML custom scheme', function() {
         });
 
         it('updates header value', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
-          element.updateHeader('SpecialTokenHeader', 'testHeader');
+          const element = await modelFixture(amf, '/passthrough', 'get');
+          element.updateHeader('api_key', 'testHeader');
           const result = element.serialize();
-          assert.equal(result.headers.SpecialTokenHeader, 'testHeader');
+          assert.equal(result.headers.api_key, 'testHeader');
         });
 
         it('ignores when no model', async () => {
           const element = await basicFixture(amf);
-          element.updateHeader('SpecialTokenHeader', 'test');
+          element.updateHeader('api_key', 'test');
           // no error
         });
       });
@@ -312,25 +283,25 @@ describe('RAML custom scheme', function() {
         });
 
         it('restores configuration from previously serialized values', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const values = {
             headers: {
-              SpecialTokenHeader: 'test-restore-header'
+              api_key: 'test-restore-header'
             },
             queryParameters: {
               debugTokenParam: 'Warning',
-              booleanTokenParam: 'false'
+              query: 'xxx'
             }
           };
           element.restore(values);
           const result = element.serialize();
-          assert.equal(result.headers.SpecialTokenHeader, 'test-restore-header');
+          assert.equal(result.headers.api_key, 'test-restore-header');
           assert.equal(result.queryParameters.debugTokenParam, 'Warning');
-          assert.equal(result.queryParameters.booleanTokenParam, 'false');
+          assert.equal(result.queryParameters.query, 'xxx');
         });
 
         it('ignores non existing model items`', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           const values = {
             headers: {
               other: 'test'
@@ -349,7 +320,7 @@ describe('RAML custom scheme', function() {
           const element = await basicFixture(amf);
           const values = {
             headers: {
-              SpecialTokenHeader: 'test-restore-header'
+              api_key: 'test-restore-header'
             },
           };
           element.restore(values);
@@ -358,7 +329,7 @@ describe('RAML custom scheme', function() {
         });
 
         it('ignores when no argument', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           element.restore();
           // no error
         });
@@ -375,7 +346,7 @@ describe('RAML custom scheme', function() {
         });
 
         beforeEach(async () => {
-          element = await modelFixture(amf, '/custom3', 'get');
+          element = await modelFixture(amf, '/passthrough-query-string', 'get');
         });
 
         after(() => {
@@ -403,7 +374,7 @@ describe('RAML custom scheme', function() {
         });
 
         beforeEach(async () => {
-          element = await modelFixture(amf, '/custom3', 'get');
+          element = await modelFixture(amf, '/passthrough-query-string', 'get');
         });
 
         after(() => {
@@ -459,7 +430,7 @@ describe('RAML custom scheme', function() {
         });
 
         it('is accessible for custom fields (headers and qp)', async () => {
-          const element = await modelFixture(amf, '/custom1', 'get');
+          const element = await modelFixture(amf, '/passthrough', 'get');
           await assert.isAccessible(element);
         });
       });

@@ -40,18 +40,6 @@ export const updateHeaderPassThrough = Symbol();
  * @mixin
  */
 export const PassThroughMethodMixin = (superClass) => class extends superClass {
-  get _transformer() {
-    if (!this.__transformer) {
-      this.__transformer = document.createElement('api-view-model-transformer');
-    }
-    return this.__transformer;
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.__transformer = null;
-  }
-
   /**
    * Updates query parameter value, if defined in the model.
    * @param {String} name
@@ -109,7 +97,7 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
       return;
     }
     const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
-    if (!model && !model.length) {
+    if (!model || !model.length) {
       return;
     }
     Object.keys(restored).forEach((name) => {
@@ -138,7 +126,16 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
   }
 
   [validatePassThrough]() {
-    return true;
+    const nodes = this.shadowRoot.querySelectorAll('api-property-form-item');
+    let validationResult = true;
+    for (let i = 0, len = nodes.length; i < len; i++) {
+      const node = nodes[i];
+      const result = node.validate();
+      if (validationResult && !result) {
+        validationResult = result;
+      }
+    }
+    return validationResult;
   }
 
   [initializePassThroughModel]() {
@@ -263,26 +260,24 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
       return '';
     }
     return html`
-    <div class="scheme-header">
-      <div class="subtitle">
-        <span>Scheme: ${schemeName}</span>
-        ${schemeDescription ? html`<anypoint-icon-button
-          class="hint-icon"
-          title="Toggle description"
-          aria-label="Activate to toggle the description"
-          ?outlined="${outlined}"
-          ?compatibility="${compatibility}"
-          @click="${this.toggleDescription}"
-        >
-          <span class="icon">${help}</span>
-        </anypoint-icon-button>` : ''}
-      </div>
-      ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
-        <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
-          <div slot="markdown-html" class="markdown-body"></div>
-        </arc-marked>
-      </div>` : ''}
-    </div>`;
+    <div class="subtitle">
+      <span>Scheme: ${schemeName}</span>
+      ${schemeDescription ? html`<anypoint-icon-button
+        class="hint-icon"
+        title="Toggle description"
+        aria-label="Activate to toggle the description"
+        ?outlined="${outlined}"
+        ?compatibility="${compatibility}"
+        @click="${this.toggleDescription}"
+      >
+        <span class="icon">${help}</span>
+      </anypoint-icon-button>` : ''}
+    </div>
+    ${schemeDescription && descriptionOpened ? html`<div class="docs-container">
+      <arc-marked .markdown="${schemeDescription}" main-docs sanitize>
+        <div slot="markdown-html" class="markdown-body"></div>
+      </arc-marked>
+    </div>` : ''}`;
   }
 
   [headersTemplate]() {

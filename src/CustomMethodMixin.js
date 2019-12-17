@@ -38,18 +38,6 @@ const restoreModelValue = Symbol();
  * @mixin
  */
 export const CustomMethodMixin = (superClass) => class extends superClass {
-  get _transformer() {
-    if (!this.__transformer) {
-      this.__transformer = document.createElement('api-view-model-transformer');
-    }
-    return this.__transformer;
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.__transformer = null;
-  }
-
   /**
    * Updates query parameter value, if defined in the model.
    * @param {String} name

@@ -69,6 +69,18 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     };
   }
 
+  get _transformer() {
+    if (!this.__transformer) {
+      this.__transformer = document.createElement('api-view-model-transformer');
+    }
+    return this.__transformer;
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.__transformer = null;
+  }
+
   updated(changed) {
     if (changed.has('security') || changed.has('type')) {
       // the `updated()` is called asynchronously anyway so no need to

@@ -23,13 +23,10 @@ export const ApiOauth1MethodMixin = (superClass) => class extends superClass {
     if (!scheme) {
       return;
     }
-    let type;
-    if (scheme) {
-      if (scheme instanceof Array) {
-        scheme = scheme[0];
-      }
-      type = this._getValue(scheme, this.ns.aml.vocabularies.security.type);
+    if (scheme instanceof Array) {
+      scheme = scheme[0];
     }
+    const type = this._getValue(scheme, this.ns.aml.vocabularies.security.type);
     const isOauth1 = type === 'OAuth 1.0';
     if (!isOauth1) {
       this.signatureMethods = defaultSignatureMethods;
