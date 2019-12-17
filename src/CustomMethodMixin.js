@@ -107,7 +107,7 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
       return;
     }
     const model = type === 'query' ? this[queryParametersParam] : this[headersParam];
-    if (!model && !model.length) {
+    if (!model || !model.length) {
       return;
     }
     Object.keys(restored).forEach((name) => {
