@@ -68,6 +68,7 @@ securitySchemes:
         403:
   custom1: !include x-custom.raml
   custom2: !include x-other.raml
+  custom3: !include x-query-string.raml
   oauth2:
     type: OAuth 2.0
     displayName: Regular OAuth 2.0 definition
@@ -185,6 +186,9 @@ securitySchemes:
 /custom2:
   get:
     securedBy: [custom2]
+/custom3:
+  get:
+    securedBy: [custom3]
 /oauth2:
   post:
     securedBy: [oauth2]
