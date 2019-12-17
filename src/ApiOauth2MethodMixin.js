@@ -39,6 +39,7 @@ const authQueryParameters = Symbol();
 const tokenQueryParameters = Symbol();
 const tokenHeaders = Symbol();
 const tokenBody = Symbol();
+const customValueHandler = Symbol();
 /**
  * Mixin that adds support for RAML's custom auth method computations
  *
@@ -56,12 +57,15 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     }
     const shKey = this._getAmfKey(this.ns.aml.vocabularies.security.scheme);
     let scheme = security[shKey];
+    /* istanbul ignore if */
     if (!scheme) {
       return;
     }
     let type;
+    /* istanbul ignore else */
     if (scheme) {
-      if (scheme instanceof Array) {
+      /* istanbul ignore else */
+      if (Array.isArray(scheme)) {
         scheme = scheme[0];
       }
       type = this._getValue(scheme, this.ns.aml.vocabularies.security.type);
@@ -73,10 +77,10 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       return;
     }
     this[setupOAuthDeliveryMethod](scheme);
-
     const sKey = this._getAmfKey(this.ns.aml.vocabularies.security.settings);
     let settings = scheme[sKey];
-    if (settings instanceof Array) {
+    /* istanbul ignore else */
+    if (Array.isArray(settings)) {
       settings = settings[0];
     }
     this[preFillAmfData](settings);
@@ -176,7 +180,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
           if (!value) {
             return;
           }
-        } else if (value instanceof Array) {
+        } else if (Array.isArray(value)) {
           if (!value[0]) {
             return;
           }
@@ -225,7 +229,8 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     const pKey = this._getAmfKey(this.ns.aml.vocabularies.apiContract.parameter);
     const nKey = this._getAmfKey(this.ns.aml.vocabularies.core.name);
     let header = info[hKey];
-    if (header instanceof Array) {
+    /* istanbul ignore else */
+    if (Array.isArray(header)) {
       header = header[0];
     }
     if (header) {
@@ -236,7 +241,8 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       }
     }
     let parameter = info[pKey];
-    if (parameter instanceof Array) {
+    /* istanbul ignore else */
+    if (Array.isArray(parameter)) {
       parameter = parameter[0];
     }
     if (parameter) {
@@ -320,7 +326,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     /* TODO this is temporary in order to support AMF 4 model change.
         We need to fully support all flows later on rather than just the first */
     let possibleFlowsNode = this._getValueArray(model, sec.flows);
-    if (possibleFlowsNode && possibleFlowsNode instanceof Array) {
+    if (possibleFlowsNode && Array.isArray(possibleFlowsNode)) {
       possibleFlowsNode = possibleFlowsNode[0];
     } else {
       possibleFlowsNode = model;
@@ -335,7 +341,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     // TODO check if this also needs to come from `possibleFlowsNode`
     const annotation = annotationKey ? model[annotationKey] : undefined;
     const grants = this[applyAnnotationGrants](apiGrants, annotation);
-    if (grants && grants instanceof Array && grants.length) {
+    if (grants && Array.isArray(grants) && grants.length) {
       const index = grants.indexOf('code');
       if (index !== -1) {
         grants[index] = 'authorization_code';
@@ -397,12 +403,14 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     if (!annotation) {
       return gransts;
     }
+    /* istanbul ignore if */
     if (!gransts) {
       gransts = [];
     }
     const d = this.ns.aml.vocabularies.data;
     let model = annotation[this._getAmfKey(d + 'authorizationGrants')];
     model = this._ensureArray(model);
+    /* istanbul ignore if */
     if (!model || !model.length) {
       return gransts;
     }
@@ -410,15 +418,18 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     const addedGrants = [];
     list.forEach((item) => {
       const v = this._getValue(item, d + 'value');
+      /* istanbul ignore if */
       if (!v) {
         return;
       }
       addedGrants.push(v);
     });
+    /* istanbul ignore if */
     if (!addedGrants.length) {
       return gransts;
     }
     const ignoreKey = d + 'ignoreDefaultGrants';
+    /* istanbul ignore if */
     if (typeof annotation[this._getAmfKey(ignoreKey)] !== 'undefined') {
       gransts = [];
     }
@@ -462,28 +473,36 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     const qpKey = this._getAmfKey(d + 'queryParameters');
     let authSettings = annotation[this._getAmfKey(d + 'authorizationSettings')];
     let tokenSettings = annotation[this._getAmfKey(d + 'accessTokenSettings')];
+    /* istanbul ignore else */
     if (authSettings) {
-      if (authSettings instanceof Array) {
+      /* istanbul ignore else */
+      if (Array.isArray(authSettings)) {
         authSettings = authSettings[0];
       }
       const qp = authSettings[qpKey];
+      /* istanbul ignore else */
       if (qp) {
         this[setupAuthRequestQueryParameters](qp);
       }
     }
+    /* istanbul ignore else */
     if (tokenSettings) {
-      if (tokenSettings instanceof Array) {
+      /* istanbul ignore else */
+      if (Array.isArray(tokenSettings)) {
         tokenSettings = tokenSettings[0];
       }
       const qp = tokenSettings[qpKey];
       const headers = tokenSettings[this._getAmfKey(d + 'headers')];
       const body = tokenSettings[this._getAmfKey(d + 'body')];
+      /* istanbul ignore else */
       if (qp) {
         this[setupTokenRequestQueryParameters](qp);
       }
+      /* istanbul ignore else */
       if (headers) {
         this[setupTokenRequestHeaders](headers);
       }
+      /* istanbul ignore else */
       if (body) {
         this[setupTokenRequestBody](body);
       }
@@ -553,7 +572,8 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     if (!param) {
       return;
     }
-    if (param instanceof Array) {
+    /* istanbul ignore else */
+    if (Array.isArray(param)) {
       param = param[0];
     }
     const factory = document.createElement('api-view-model-transformer');
@@ -561,7 +581,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     return factory.modelForRawObject(param, modelOptions);
   }
 
-  _customValueChanged(e) {
+  [customValueHandler](e) {
     const { target } = e;
     const index = Number(target.dataset.index);
     const type = target.dataset.type;
@@ -645,7 +665,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
           ?disabled="${disabled}"
           data-type="${type}"
           data-index="${index}"
-          @value-changed="${this._customValueChanged}"
+          @value-changed="${this[customValueHandler]}"
         ></api-property-form-item>
         ${item.hasDescription ? html`<anypoint-icon-button
           class="hint-icon"
