@@ -65,7 +65,7 @@
     "@advanced-rest-client/oauth-authorization": "^3.0.1",
     "@advanced-rest-client/prettier-config": "^0.1.0",
     "@advanced-rest-client/testing-karma-sl": "^1.1.0",
-    "@api-components/api-model-generator": "^0.2.3",
+    "@api-components/api-model-generator": "^0.2.5",
     "@api-components/api-navigation": "^4.0.3",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
@@ -76,9 +76,9 @@
     "@polymer/iron-test-helpers": "^3.0.1",
     "es-dev-server": "^1.36.2",
     "eslint": "^6.8.0",
-    "husky": "^3.1.0",
-    "lint-staged": "^9.5.0",
-    "sinon": "^7.5.0",
+    "husky": "^4.2.0",
+    "lint-staged": "^10.0.2",
+    "sinon": "^8.1.1",
     "webpack-merge": "^4.1.5"
   },
   "eslintConfig": {
@@ -95,8 +95,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   }
 }
