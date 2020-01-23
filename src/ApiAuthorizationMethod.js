@@ -37,15 +37,28 @@ import {
   serializeOauth2Auth,
 } from '@advanced-rest-client/authorization-method/src/Oauth2MethodMixin.js';
 import styles from './Styles.js';
+import {
+  ApiKeyMethodMixin,
+  initializeApiKeyModel,
+  validateApiKey,
+  serializeApiKey,
+  restoreApiKey,
+  renderApiKey,
+  updateQueryParameterApiKey,
+  updateHeaderApiKey,
+  updateCookieApiKey,
+} from './ApiKeyMethodMixin.js';
 
 export const METHOD_CUSTOM = 'custom';
 export const METHOD_PASS_THROUGH = 'pass through';
+export const METHOD_API_KEY = 'api key';
 
 export class ApiAuthorizationMethod extends AmfHelperMixin(
   ApiOauth2MethodMixin(
     ApiOauth1MethodMixin(
       CustomMethodMixin(
-        PassThroughMethodMixin(AuthorizationMethod))))) {
+        PassThroughMethodMixin(
+          ApiKeyMethodMixin(AuthorizationMethod)))))) {
 
   get styles() {
     return [
@@ -117,8 +130,10 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
       case METHOD_OAUTH2: this[initializeOauth2Model](); break;
       case METHOD_OAUTH1: this[initializeOauth1Model](); break;
       case METHOD_PASS_THROUGH: this[initializePassThroughModel](); break;
+      case METHOD_API_KEY: this[initializeApiKeyModel](); break;
     }
   }
+
   /**
    * Toggles value of `descriptionOpened` property.
    *
@@ -138,6 +153,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     switch(type) {
       case METHOD_CUSTOM: return this[validateCustom]();
       case METHOD_PASS_THROUGH: return this[validatePassThrough]();
+      case METHOD_API_KEY: return this[validateApiKey]();
       default: return super.validate();
     }
   }
@@ -153,6 +169,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
       case METHOD_CUSTOM: return this[serializeCustom]();
       case METHOD_OAUTH2: return this[serializeOauth2Auth]();
       case METHOD_PASS_THROUGH: return this[serializePassThrough]();
+      case METHOD_API_KEY: return this[serializeApiKey]();
       default: return super.serialize();
     }
   }
@@ -169,6 +186,7 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     switch(type) {
       case METHOD_CUSTOM: return this[restoreCustom](settings);
       case METHOD_PASS_THROUGH: return this[restorePassThrough](settings);
+      case METHOD_API_KEY: return this[restoreApiKey](settings);
       default: return super.restore(settings);
     }
   }
@@ -178,9 +196,11 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
     switch(type) {
       case METHOD_CUSTOM: return this[renderCustom]();
       case METHOD_PASS_THROUGH: return this[renderPassThrough]();
+      case METHOD_API_KEY: return this[renderApiKey]();
       default: return super.render();
     }
   }
+
   /**
    * Updates, if applicable, query parameter value.
    * This is supported for RAML's custom scheme and Pass Through
@@ -204,6 +224,9 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
         break;
       case METHOD_PASS_THROUGH:
         this[updateQueryParameterPassThrough](name, newValue);
+        break;
+      case METHOD_API_KEY:
+        this[updateQueryParameterApiKey](name, newValue);
         break;
     }
   }
@@ -230,6 +253,31 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
         break;
       case METHOD_PASS_THROUGH:
         this[updateHeaderPassThrough](name, newValue);
+        break;
+      case METHOD_API_KEY:
+        this[updateHeaderApiKey](name, newValue);
+        break;
+    }
+  }
+
+  /**
+   * Updates, if applicable, cookie value.
+   * This is supported in OAS' Api Key.
+   *
+   * This does nothing if the cookie has not been defined for current
+   * scheme.
+   *
+   * @param {String} name The name of the changed cookie
+   * @param {String} newValue A value to apply. May be empty but must be defined.
+   */
+  updateCookie(name, newValue) {
+    if (newValue === null || newValue === undefined) {
+      newValue = '';
+    }
+    const type = normalizeType(this.type);
+    switch(type) {
+      case METHOD_API_KEY:
+        this[updateCookieApiKey](name, newValue);
         break;
     }
   }

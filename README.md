@@ -12,14 +12,11 @@ This element adds support for the following security description:
 -   OAuth 1
 -   RAML's custom scheme
 -   Pass Through
-
-Not supported:
-
--   OAS' API key - AMF model does not produce correct model for union of two or more API Key methods. API Key will be implemented when AMF fixes this issue.
+-   Api Key (OAS)
 
 ## Usage
 
-The component supports authorization methods defined in `@advanced-rest-client/authorization-method` package plus adds `custom` type which corresponds to RAML's [custom authorization scheme](https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#x-other).
+The component supports authorization methods defined in `@advanced-rest-client/authorization-method` package plus adds `custom` type which corresponds to RAML's [custom authorization scheme](https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/#x-other) and `Api Key` which is Open API Spec's authorization scheme.
 
 
 ### Applying AMF model
@@ -50,6 +47,10 @@ When ready the values are applied to the element.
 The order of setting `type`, `amf`, and `security` parameters doesn't matter as the data processing starts asynchronously. However, if the `type` does not match passed `security` the `security` settings is ignored.
 
 A note on clearing `settings` property. When an `undefined` or any incompatible value is set to the `settings` property, the view won't change. Incompatible value is just ignored. Remove the element from the DOM if no longer applicable, change `type` property to something else, or apply new `settings` with the new values.
+
+__Exception__
+
+OAS' Api Key method support logical `AND` operation. This means that in this case the `security` parameter should receive the array of defined for the operation security schemes. That is, the array of items that is under `security.scheme` property when accessing security definition in the AMF model.
 
 ### Installation
 

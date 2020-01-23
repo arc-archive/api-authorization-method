@@ -81,6 +81,7 @@ class DemoPage extends ApiDemoPageBase {
       case 'Pass Through': return 'pass through';
       case 'OAuth 2.0': return 'oauth 2';
       case 'OAuth 1.0': return 'oauth 1';
+      case 'Api Key': return 'api key';
       default:
         if (String(securityType).indexOf('x-') === 0) {
           return 'custom';
@@ -123,6 +124,9 @@ class DemoPage extends ApiDemoPageBase {
       }
       auth = requirement;
       type = helper._getValue(scheme, helper.ns.aml.vocabularies.security.type);
+      if (type === 'Api Key') {
+        auth = schemes;
+      }
       break;
     }
     this.security = auth;
@@ -131,7 +135,8 @@ class DemoPage extends ApiDemoPageBase {
 
   _apiListTemplate() {
     return [
-      ['demo-api', 'Demo API']
+      ['demo-api', 'Demo API'],
+      ['api-keys', 'API key'],
     ].map(([file, label]) => html`
       <paper-item data-src="${file}-compact.json">${label} - compact model</paper-item>
       <paper-item data-src="${file}.json">${label}</paper-item>
