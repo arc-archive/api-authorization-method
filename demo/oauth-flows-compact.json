@@ -1,0 +1,2419 @@
+[
+{
+"@id": "",
+"@type": [
+"doc:Document",
+"doc:Fragment",
+"doc:Module",
+"doc:Unit"
+],
+"doc:encodes": [
+{
+"@id": "#10",
+"@type": [
+"apiContract:WebAPI",
+"doc:RootDomainElement",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "OAS OAuth flows API"
+}
+],
+"core:version": [
+{
+"@value": "1.0.0"
+}
+],
+"apiContract:endpoint": [
+{
+"@id": "#11",
+"@type": [
+"apiContract:EndPoint",
+"doc:DomainElement"
+],
+"apiContract:path": [
+{
+"@value": "/pets"
+}
+],
+"apiContract:supportedOperation": [
+{
+"@id": "#12",
+"@type": [
+"apiContract:Operation",
+"doc:DomainElement"
+],
+"apiContract:method": [
+{
+"@value": "patch"
+}
+],
+"apiContract:guiSummary": [
+{
+"@value": "Add a new pet"
+}
+],
+"apiContract:returns": [
+{
+"@id": "#13",
+"@type": [
+"apiContract:Response",
+"apiContract:Message",
+"doc:DomainElement"
+],
+"apiContract:statusCode": [
+{
+"@value": "default"
+}
+],
+"core:name": [
+{
+"@value": "default"
+}
+],
+"core:description": [
+{
+"@value": "Unexpected error"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#13/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#13/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#13"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(59,8)-(61,0)]"
+}
+]
+},
+{
+"@id": "#13/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(60,10)-(61,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"security:security": [
+{
+"@id": "#14",
+"@type": [
+"security:SecurityRequirement",
+"doc:DomainElement"
+],
+"security:schemes": [
+{
+"@id": "#15",
+"@type": [
+"security:ParametrizedSecurityScheme",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "oAuthSample"
+}
+],
+"security:scheme": [
+{
+"@id": "#1",
+"@type": [
+"security:SecurityScheme",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "oAuthSample"
+}
+],
+"security:type": [
+{
+"@value": "OAuth 2.0"
+}
+],
+"core:description": [
+{
+"@value": "This API uses OAuth 2 with the implicit grant flow. [More info](https://api.example.com/docs/auth)"
+}
+],
+"security:settings": [
+{
+"@id": "#2",
+"@type": [
+"security:OAuth2Settings",
+"security:Settings",
+"doc:DomainElement"
+],
+"security:flows": [
+{
+"@id": "#3",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "https://api.example.com/oauth2/authorize"
+}
+],
+"security:flow": [
+{
+"@value": "implicit"
+}
+],
+"security:scope": [
+{
+"@id": "#4",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "read_pets"
+}
+],
+"core:description": [
+{
+"@value": "read your pets"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#4/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#4/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(28,12)-(28,21)]"
+}
+]
+},
+{
+"@id": "#4/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(28,23)-(28,37)]"
+}
+]
+},
+{
+"@id": "#4/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#4"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(28,12)-(29,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#5",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "write_pets"
+}
+],
+"core:description": [
+{
+"@value": "modify pets in your account"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#5/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#5/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,12)-(29,22)]"
+}
+]
+},
+{
+"@id": "#5/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,24)-(29,51)]"
+}
+]
+},
+{
+"@id": "#5/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#5"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,12)-(30,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#3/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#3/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(26,10)-(27,0)]"
+}
+]
+},
+{
+"@id": "#3/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:scope"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(27,10)-(30,0)]"
+}
+]
+},
+{
+"@id": "#3/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#3"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(25,8)-(30,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#6",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "/oauth2/authorize"
+}
+],
+"security:accessTokenUri": [
+{
+"@value": "/oauth2/token"
+}
+],
+"security:flow": [
+{
+"@value": "authorizationCode"
+}
+],
+"security:refreshUri": [
+{
+"@value": "/oauth2/refresh"
+}
+],
+"security:scope": [
+{
+"@id": "#7",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "all"
+}
+],
+"core:description": [
+{
+"@value": "full access"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#7/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#7/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(35,12)-(35,15)]"
+}
+]
+},
+{
+"@id": "#7/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(35,17)-(35,28)]"
+}
+]
+},
+{
+"@id": "#7/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#7"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(35,12)-(36,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#6/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#6/source-map/lexical/element_4",
+"sourcemaps:element": [
+{
+"@value": "security:refreshUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(33,10)-(34,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#6"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(30,8)-(36,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:scope"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(34,10)-(36,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:accessTokenUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(32,10)-(33,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(31,10)-(32,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#8",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "/oauth2/authorize-password"
+}
+],
+"security:accessTokenUri": [
+{
+"@value": "/oauth2/token-password"
+}
+],
+"security:flow": [
+{
+"@value": "password"
+}
+],
+"security:refreshUri": [
+{
+"@value": "/oauth2/refresh-password"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#8/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#8/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "security:accessTokenUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(38,10)-(39,0)]"
+}
+]
+},
+{
+"@id": "#8/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(37,10)-(38,0)]"
+}
+]
+},
+{
+"@id": "#8/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:refreshUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(39,10)-(40,0)]"
+}
+]
+},
+{
+"@id": "#8/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#8"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(36,8)-(40,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#9",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "/oauth2/authorize-client"
+}
+],
+"security:accessTokenUri": [
+{
+"@value": "/oauth2/token-client"
+}
+],
+"security:flow": [
+{
+"@value": "clientCredentials"
+}
+],
+"security:refreshUri": [
+{
+"@value": "/oauth2/refresh-client"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#9/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#9/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "security:accessTokenUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(42,10)-(43,0)]"
+}
+]
+},
+{
+"@id": "#9/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(41,10)-(42,0)]"
+}
+]
+},
+{
+"@id": "#9/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:refreshUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(43,10)-(45,0)]"
+}
+]
+},
+{
+"@id": "#9/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#9"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(40,8)-(45,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#2/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#2/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#2"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(22,0)-(45,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#1/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:declared-element": [
+{
+"@id": "#1/source-map/declared-element/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#1"
+}
+],
+"sourcemaps:value": [
+{
+"@value": ""
+}
+]
+}
+],
+"sourcemaps:lexical": [
+{
+"@id": "#1/source-map/lexical/element_4",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(23,6)-(24,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#1"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(21,4)-(45,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:settings"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(22,0)-(45,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:type"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(22,6)-(23,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(21,4)-(21,15)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"security:settings": [
+{
+"@id": "#16",
+"@type": [
+"security:OAuth2Settings",
+"security:Settings",
+"doc:DomainElement"
+],
+"security:flows": [
+{
+"@id": "#17",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:scope": [
+{
+"@id": "#18",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "write_pets"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#18/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#18/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#18"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(56,12)-(56,22)]"
+}
+]
+},
+{
+"@id": "#18/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(56,12)-(56,22)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#19",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "read_pets"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#19/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#19/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#19"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(57,12)-(57,21)]"
+}
+]
+},
+{
+"@id": "#19/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(57,12)-(57,21)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#17/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#17/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:scope"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(55,22)-(58,0)]"
+}
+]
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#15/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#15/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#15"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(55,10)-(58,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#14/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#14/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#14"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(55,10)-(58,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"apiContract:server": [
+{
+"@id": "#20",
+"@type": [
+"apiContract:Server",
+"doc:DomainElement"
+],
+"core:urlTemplate": [
+{
+"@value": "https://{customerId}.saas-app.com:{port}/v2"
+}
+],
+"apiContract:variable": [
+{
+"@id": "#21",
+"@type": [
+"apiContract:Parameter",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "customerId"
+}
+],
+"apiContract:paramName": [
+{
+"@value": "customerId"
+}
+],
+"apiContract:required": [
+{
+"@value": true
+}
+],
+"apiContract:binding": [
+{
+"@value": "path"
+}
+],
+"raml-shapes:schema": [
+{
+"@id": "#22",
+"@type": [
+"raml-shapes:ScalarShape",
+"raml-shapes:AnyShape",
+"shacl:Shape",
+"raml-shapes:Shape",
+"doc:DomainElement"
+],
+"shacl:datatype": [
+{
+"@id": "http://www.w3.org/2001/XMLSchema#string"
+}
+],
+"shacl:name": [
+{
+"@value": "customerId"
+}
+],
+"core:description": [
+{
+"@value": "Customer ID assigned by the service provider"
+}
+],
+"shacl:defaultValue": [
+{
+"@id": "#23",
+"@type": [
+"data:Scalar",
+"data:Node",
+"doc:DomainElement"
+],
+"data:value": [
+{
+"@value": "demo"
+}
+],
+"shacl:datatype": [
+{
+"@id": "http://www.w3.org/2001/XMLSchema#string"
+}
+],
+"core:name": [
+{
+"@value": "scalar_1"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#23/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#23/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#23"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(11,17)-(11,21)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"shacl:defaultValueStr": [
+{
+"@value": "demo"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#22/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#22/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#22"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(11,0)-(13,0)]"
+}
+]
+},
+{
+"@id": "#22/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(12,8)-(13,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#21/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#21/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#21"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(10,6)-(13,0)]"
+}
+]
+},
+{
+"@id": "#21/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(10,6)-(10,16)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#24",
+"@type": [
+"apiContract:Parameter",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "port"
+}
+],
+"apiContract:paramName": [
+{
+"@value": "port"
+}
+],
+"apiContract:required": [
+{
+"@value": true
+}
+],
+"apiContract:binding": [
+{
+"@value": "path"
+}
+],
+"raml-shapes:schema": [
+{
+"@id": "#25",
+"@type": [
+"raml-shapes:ScalarShape",
+"raml-shapes:AnyShape",
+"shacl:Shape",
+"raml-shapes:Shape",
+"doc:DomainElement"
+],
+"shacl:datatype": [
+{
+"@id": "http://www.w3.org/2001/XMLSchema#string"
+}
+],
+"shacl:name": [
+{
+"@value": "port"
+}
+],
+"shacl:defaultValue": [
+{
+"@id": "#26",
+"@type": [
+"data:Scalar",
+"data:Node",
+"doc:DomainElement"
+],
+"data:value": [
+{
+"@value": "443"
+}
+],
+"shacl:datatype": [
+{
+"@id": "http://www.w3.org/2001/XMLSchema#string"
+}
+],
+"core:name": [
+{
+"@value": "scalar_1"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#26/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#26/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#26"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(17,17)-(17,22)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"shacl:in": [
+{
+"@id": "#25/list",
+"@type": "rdfs:Seq",
+"rdfs:_1": [
+{
+"@id": "#26",
+"@type": [
+"data:Scalar",
+"data:Node",
+"doc:DomainElement"
+],
+"data:value": [
+{
+"@value": "443"
+}
+],
+"shacl:datatype": [
+{
+"@id": "http://www.w3.org/2001/XMLSchema#string"
+}
+],
+"core:name": [
+{
+"@value": "scalar_1"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#26/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#26/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#26"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(15,12)-(15,17)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"rdfs:_2": [
+{
+"@id": "#27",
+"@type": [
+"data:Scalar",
+"data:Node",
+"doc:DomainElement"
+],
+"data:value": [
+{
+"@value": "8443"
+}
+],
+"shacl:datatype": [
+{
+"@id": "http://www.w3.org/2001/XMLSchema#string"
+}
+],
+"core:name": [
+{
+"@value": "scalar_2"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#27/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#27/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#27"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(16,12)-(16,18)]"
+}
+]
+}
+]
+}
+]
+}
+]
+}
+],
+"shacl:defaultValueStr": [
+{
+"@value": "443"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#25/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#25/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#25"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(14,0)-(19,0)]"
+}
+]
+},
+{
+"@id": "#25/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "shacl:in"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(14,8)-(17,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#24/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#24/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#24"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(13,6)-(19,0)]"
+}
+]
+},
+{
+"@id": "#24/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(13,6)-(13,10)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#20/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#20/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "core:urlTemplate"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(8,4)-(9,0)]"
+}
+]
+},
+{
+"@id": "#20/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "apiContract:variable"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(9,4)-(19,0)]"
+}
+]
+},
+{
+"@id": "#20/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#20"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(8,4)-(19,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#12/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#12/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "apiContract:guiSummary"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(53,6)-(54,0)]"
+}
+]
+},
+{
+"@id": "#12/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "apiContract:returns"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(58,6)-(61,0)]"
+}
+]
+},
+{
+"@id": "#12/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#12"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(52,4)-(61,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#11/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#11/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#11"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(51,2)-(61,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#10/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:source-vendor": [
+{
+"@id": "#10/source-map/source-vendor/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#10"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "OAS 3.0"
+}
+]
+}
+],
+"sourcemaps:lexical": [
+{
+"@id": "#10/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "core:version"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(4,2)-(5,0)]"
+}
+]
+},
+{
+"@id": "#10/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(5,2)-(7,0)]"
+}
+]
+},
+{
+"@id": "#10/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "apiContract:endpoint"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(50,6)-(61,0)]"
+}
+]
+},
+{
+"@id": "#10/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#10"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(1,0)-(61,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"doc:version": [
+{
+"@value": "2.0.1"
+}
+],
+"doc:root": [
+{
+"@value": true
+}
+],
+"doc:declares": [
+{
+"@id": "#1",
+"@type": [
+"security:SecurityScheme",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "oAuthSample"
+}
+],
+"security:type": [
+{
+"@value": "OAuth 2.0"
+}
+],
+"core:description": [
+{
+"@value": "This API uses OAuth 2 with the implicit grant flow. [More info](https://api.example.com/docs/auth)"
+}
+],
+"security:settings": [
+{
+"@id": "#2",
+"@type": [
+"security:OAuth2Settings",
+"security:Settings",
+"doc:DomainElement"
+],
+"security:flows": [
+{
+"@id": "#3",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "https://api.example.com/oauth2/authorize"
+}
+],
+"security:flow": [
+{
+"@value": "implicit"
+}
+],
+"security:scope": [
+{
+"@id": "#4",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "read_pets"
+}
+],
+"core:description": [
+{
+"@value": "read your pets"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#4/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#4/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(28,12)-(28,21)]"
+}
+]
+},
+{
+"@id": "#4/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(28,23)-(28,37)]"
+}
+]
+},
+{
+"@id": "#4/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#4"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(28,12)-(29,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#5",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "write_pets"
+}
+],
+"core:description": [
+{
+"@value": "modify pets in your account"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#5/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#5/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,12)-(29,22)]"
+}
+]
+},
+{
+"@id": "#5/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,24)-(29,51)]"
+}
+]
+},
+{
+"@id": "#5/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#5"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,12)-(30,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#3/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#3/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(26,10)-(27,0)]"
+}
+]
+},
+{
+"@id": "#3/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:scope"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(27,10)-(30,0)]"
+}
+]
+},
+{
+"@id": "#3/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#3"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(25,8)-(30,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#6",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "/oauth2/authorize"
+}
+],
+"security:accessTokenUri": [
+{
+"@value": "/oauth2/token"
+}
+],
+"security:flow": [
+{
+"@value": "authorizationCode"
+}
+],
+"security:refreshUri": [
+{
+"@value": "/oauth2/refresh"
+}
+],
+"security:scope": [
+{
+"@id": "#7",
+"@type": [
+"security:Scope",
+"doc:DomainElement"
+],
+"core:name": [
+{
+"@value": "all"
+}
+],
+"core:description": [
+{
+"@value": "full access"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#7/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#7/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(35,12)-(35,15)]"
+}
+]
+},
+{
+"@id": "#7/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(35,17)-(35,28)]"
+}
+]
+},
+{
+"@id": "#7/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "amf://id#7"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(35,12)-(36,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#6/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#6/source-map/lexical/element_4",
+"sourcemaps:element": [
+{
+"@value": "security:refreshUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(33,10)-(34,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#6"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(30,8)-(36,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:scope"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(34,10)-(36,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:accessTokenUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(32,10)-(33,0)]"
+}
+]
+},
+{
+"@id": "#6/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(31,10)-(32,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#8",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "/oauth2/authorize-password"
+}
+],
+"security:accessTokenUri": [
+{
+"@value": "/oauth2/token-password"
+}
+],
+"security:flow": [
+{
+"@value": "password"
+}
+],
+"security:refreshUri": [
+{
+"@value": "/oauth2/refresh-password"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#8/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#8/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "security:accessTokenUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(38,10)-(39,0)]"
+}
+]
+},
+{
+"@id": "#8/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(37,10)-(38,0)]"
+}
+]
+},
+{
+"@id": "#8/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:refreshUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(39,10)-(40,0)]"
+}
+]
+},
+{
+"@id": "#8/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#8"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(36,8)-(40,0)]"
+}
+]
+}
+]
+}
+]
+},
+{
+"@id": "#9",
+"@type": [
+"security:OAuth2Flow",
+"doc:DomainElement"
+],
+"security:authorizationUri": [
+{
+"@value": "/oauth2/authorize-client"
+}
+],
+"security:accessTokenUri": [
+{
+"@value": "/oauth2/token-client"
+}
+],
+"security:flow": [
+{
+"@value": "clientCredentials"
+}
+],
+"security:refreshUri": [
+{
+"@value": "/oauth2/refresh-client"
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#9/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#9/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "security:accessTokenUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(42,10)-(43,0)]"
+}
+]
+},
+{
+"@id": "#9/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:authorizationUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(41,10)-(42,0)]"
+}
+]
+},
+{
+"@id": "#9/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:refreshUri"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(43,10)-(45,0)]"
+}
+]
+},
+{
+"@id": "#9/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#9"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(40,8)-(45,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#2/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#2/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#2"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(22,0)-(45,0)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"sourcemaps:sources": [
+{
+"@id": "#1/source-map",
+"@type": [
+"sourcemaps:SourceMap"
+],
+"sourcemaps:declared-element": [
+{
+"@id": "#1/source-map/declared-element/element_0",
+"sourcemaps:element": [
+{
+"@value": "amf://id#1"
+}
+],
+"sourcemaps:value": [
+{
+"@value": ""
+}
+]
+}
+],
+"sourcemaps:lexical": [
+{
+"@id": "#1/source-map/lexical/element_4",
+"sourcemaps:element": [
+{
+"@value": "core:description"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(23,6)-(24,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_2",
+"sourcemaps:element": [
+{
+"@value": "amf://id#1"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(21,4)-(45,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "security:settings"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(22,0)-(45,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_1",
+"sourcemaps:element": [
+{
+"@value": "security:type"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(22,6)-(23,0)]"
+}
+]
+},
+{
+"@id": "#1/source-map/lexical/element_3",
+"sourcemaps:element": [
+{
+"@value": "core:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(21,4)-(21,15)]"
+}
+]
+}
+]
+}
+]
+}
+],
+"@context": {
+"@base": "amf://id",
+"shacl": "http://www.w3.org/ns/shacl#",
+"raml-shapes": "http://a.ml/vocabularies/shapes#",
+"security": "http://a.ml/vocabularies/security#",
+"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+"data": "http://a.ml/vocabularies/data#",
+"doc": "http://a.ml/vocabularies/document#",
+"apiContract": "http://a.ml/vocabularies/apiContract#",
+"core": "http://a.ml/vocabularies/core#",
+"sourcemaps": "http://a.ml/vocabularies/document-source-maps#"
+}
+}
+]
