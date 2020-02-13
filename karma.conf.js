@@ -17,7 +17,12 @@ module.exports = config => {
       esm: {
         nodeResolve: true,
       },
-      // you can overwrite/extend the config further
+
+      client: {
+        mocha: {
+          timeout: 10000
+        }
+      },
     }),
   );
   return config;
