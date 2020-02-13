@@ -13,6 +13,7 @@ This element adds support for the following security description:
 -   RAML's custom scheme
 -   Pass Through
 -   Api Key (OAS)
+-   Bearer (OAS)
 
 This component fully support OAS security schemes.
 

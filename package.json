@@ -51,7 +51,7 @@
   "dependencies": {
     "@advanced-rest-client/arc-icons": "^3.0.5",
     "@advanced-rest-client/arc-marked": "^1.0.6",
-    "@advanced-rest-client/authorization-method": "^0.1.8",
+    "@advanced-rest-client/authorization-method": "^0.1.9",
     "@anypoint-web-components/anypoint-button": "^1.0.15",
     "@api-components/amf-helper-mixin": "^4.0.19",
     "@api-components/api-property-form-item": "^3.0.12",

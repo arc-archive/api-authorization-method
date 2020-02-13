@@ -76,12 +76,15 @@ class DemoPage extends ApiDemoPageBase {
   get type() {
     const { securityType } = this;
     switch (securityType) {
-      case 'Basic Authentication': return 'basic';
+      case 'Basic Authentication':
+      case 'basic':
+        return 'basic';
       case 'Digest Authentication': return 'digest';
       case 'Pass Through': return 'pass through';
       case 'OAuth 2.0': return 'oauth 2';
       case 'OAuth 1.0': return 'oauth 1';
       case 'Api Key': return 'api key';
+      case 'bearer': return 'bearer';
       default:
         if (String(securityType).indexOf('x-') === 0) {
           return 'custom';
@@ -103,11 +106,12 @@ class DemoPage extends ApiDemoPageBase {
 
   setData(selected) {
     const helper = this.helper;
+    const sec = helper.ns.aml.vocabularies.security;
     const webApi = helper._computeWebApi(this.amf);
     const method = helper._computeMethodModel(webApi, selected);
-    const key = helper._getAmfKey(helper.ns.aml.vocabularies.security.security);
-    const shKey = helper._getAmfKey(helper.ns.aml.vocabularies.security.scheme);
-    const schemesKey = helper._getAmfKey(helper.ns.aml.vocabularies.security.schemes);
+    const key = helper._getAmfKey(sec.security);
+    const shKey = helper._getAmfKey(sec.scheme);
+    const schemesKey = helper._getAmfKey(sec.schemes);
     const security = helper._ensureArray(method[key]);
     let auth;
     let type;
@@ -123,9 +127,13 @@ class DemoPage extends ApiDemoPageBase {
         scheme = scheme[0];
       }
       auth = requirement;
-      type = helper._getValue(scheme, helper.ns.aml.vocabularies.security.type);
+      type = helper._getValue(scheme, sec.type);
       if (type === 'Api Key') {
         auth = schemes;
+      } else if (type === 'http') {
+        const settingsKey = helper._getAmfKey(sec.settings);
+        const settings = helper._ensureArray(scheme[settingsKey])[0];
+        type = helper._getValue(settings, sec.scheme);
       }
       break;
     }
@@ -138,6 +146,7 @@ class DemoPage extends ApiDemoPageBase {
       ['demo-api', 'Demo API'],
       ['api-keys', 'API key'],
       ['oauth-flows', 'OAS OAuth Flow'],
+      ['oas-bearer', 'OAS Bearer'],
     ].map(([file, label]) => html`
       <paper-item data-src="${file}-compact.json">${label} - compact model</paper-item>
       <paper-item data-src="${file}.json">${label}</paper-item>
