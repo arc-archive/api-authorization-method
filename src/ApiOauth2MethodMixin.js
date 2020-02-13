@@ -46,6 +46,7 @@ const readFlowScopes = Symbol();
 const readFlowsTypes = Symbol();
 const applyFlow = Symbol();
 const securityScheme = Symbol();
+const isRamlFlow = Symbol();
 
 /**
  * Mixin that adds support for RAML's custom auth method computations
@@ -335,6 +336,46 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     }
     return defaults;
   }
+
+  /**
+   * It's quite a bit naive approach to determine whether given model is RAML's
+   * or OAS'. There is a significant difference of how to treat grant types
+   * (in OAS it is called flows). While in OAS it is mandaroty to define a grant type
+   * (a flow) RAML has no such requirement. By default this component assumes that
+   * all standard (OAuth 2 defined) grant types are supported when grant types are not
+   * defined. So it is possible to not define them and the component will work.
+   * However, in the AMF model there's always at least one grant type (a flow) whether
+   * it's RAML's or OAS' and whether grant type is defined or not.
+   *
+   * To apply correct settings this component needs to know how to process the data.
+   * If it's OAS then when changing grant type it also changes current settings
+   * (like scopes, auth uri, etc). If the model is RAML's then change in current grant type
+   * won't trigger settings setup.
+   *
+   * Note, this function returns true when there's no flows whatsoever. It's not
+   * really what it means but it is consistent with component's logic.
+   *
+   * Current method is deterministic and when AMF model change this most probably stop
+   * working. It tests whether there's a single grant type and this grant type
+   * has no AMF's `security:flow` property.
+   *
+   * @param {Array<Object>} flows List of current flows loaded with the AMF model.
+   * @return {Boolean} True if current model should be treated as RAML's model.
+   */
+  [isRamlFlow](flows) {
+    if (!Array.isArray(flows)) {
+      return true;
+    }
+    let result = false;
+    if (flows.length === 1) {
+      const type = this._getValue(flows[0], this.ns.aml.vocabularies.security.flow);
+      if (!type) {
+        result = true;
+      }
+    }
+    return result;
+  }
+
   /**
    * Reads API security definition and applies in to the view as predefined
    * values.
@@ -351,30 +392,15 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       return;
     }
     const flows = this._getValueArray(model, sec.flows);
-    if (flows && Array.isArray(flows)) {
-      let isOasFlow = true;
-      // There's no way of telling whether the scheme comes from OAS or RAML
-      // so this is a walkaround to find whether this is RAML type.
-      // If the flow has no `security:flow` property then it cannot be OAS.
-      // It's pretty much a guess work right now.
-      if (flows.length === 1) {
-        const type = this._getValue(flows[0], sec.flow);
-        if (!type) {
-          isOasFlow = false;
-        }
-      }
-      // OAS' OAuth 2 flows has grant's settings included in the flow.
-      // This requires different approach to prepopulating data as it differes
-      // significantly from RAML's.
-      if (isOasFlow) {
-        this[preFillFlowData](flows);
-        return;
-      }
+    if (Array.isArray(flows) && !this[isRamlFlow](flows)) {
+      this[preFillFlowData](flows);
+      return;
     }
 
-    this.authorizationUri = this._getValue(model, sec.authorizationUri) || '';
-    this.accessTokenUri = this._getValue(model, sec.accessTokenUri) || '';
-    this.scopes = this[readSecurityScopes](model[this._getAmfKey(sec.scope)]);
+    const flow = flows && flows.length ? flows[0] : model;
+    this.authorizationUri = this._getValue(flow, sec.authorizationUri) || '';
+    this.accessTokenUri = this._getValue(flow, sec.accessTokenUri) || '';
+    this.scopes = this[readSecurityScopes](flow[this._getAmfKey(sec.scope)]);
     const apiGrants = this._getValueArray(model, sec.authorizationGrant);
     // TODO check if this also needs to come from `possibleFlowsNode`
     const annotationKey = this[amfCustomSettingsKey](model);
@@ -524,7 +550,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     }
     const sec = this.ns.aml.vocabularies.security;
     const flows = this._getValueArray(settings, sec.flows);
-    if (!flows || !Array.isArray(flows)) {
+    if (!Array.isArray(flows) || this[isRamlFlow](flows)) {
       return;
     }
     if (name === 'client_credentials') {
