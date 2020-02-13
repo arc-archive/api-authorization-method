@@ -13,6 +13,7 @@ export const initializePassThroughModel: Symbol;
 export const renderPassThrough: Symbol;
 export const updateQueryParameterPassThrough: Symbol;
 export const updateHeaderPassThrough: Symbol;
+export const clearPassThrough: Symbol;
 
 export {PassThroughMethodMixin};
 

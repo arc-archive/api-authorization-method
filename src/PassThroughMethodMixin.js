@@ -31,6 +31,7 @@ export const initializePassThroughModel = Symbol();
 export const renderPassThrough = Symbol();
 export const updateQueryParameterPassThrough = Symbol();
 export const updateHeaderPassThrough = Symbol();
+export const clearPassThrough = Symbol();
 
 /**
  * Mixin that adds support for RAML's Pass Through auth method computations
@@ -123,6 +124,17 @@ export const PassThroughMethodMixin = (superClass) => class extends superClass {
       queryParameters.forEach((parameter) => result.queryParameters[parameter.name] = parameter.value);
     }
     return result;
+  }
+
+  [clearPassThrough]() {
+    const headers = this[headersParam];
+    const queryParameters = this[queryParametersParam];
+    if (Array.isArray(headers)) {
+      headers.forEach((header) => header.value = '');
+    }
+    if (Array.isArray(queryParameters)) {
+      queryParameters.forEach((parameter) => parameter.value = '');
+    }
   }
 
   [validatePassThrough]() {

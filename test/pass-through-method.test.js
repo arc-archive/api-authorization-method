@@ -434,6 +434,47 @@ describe('Pass Through authorization', function() {
           await assert.isAccessible(element);
         });
       });
+
+      describe('clear()', () => {
+        let amf;
+        let factory;
+        let element;
+
+        before(async () => {
+          amf = await AmfLoader.load({ compact });
+          factory = document.createElement('api-view-model-transformer');
+        });
+
+        after(() => {
+          factory = null;
+        });
+
+        beforeEach(async () => {
+          element = await modelFixture(amf, '/passthrough', 'get');
+        });
+
+        afterEach(() => {
+          factory.clearCache();
+        });
+
+        it('clears headers', () => {
+          const input = element.shadowRoot.querySelector(`[name="api_key"]`);
+          input.value = 'test';
+          input.dispatchEvent(new CustomEvent('input'));
+          element.clear();
+          const params = element.serialize();
+          assert.strictEqual(params.headers.api_key, '');
+        });
+
+        it('clears query parameters', () => {
+          const input = element.shadowRoot.querySelector(`[name="query"]`);
+          input.value = 'test';
+          input.dispatchEvent(new CustomEvent('input'));
+          element.clear();
+          const params = element.serialize();
+          assert.strictEqual(params.queryParameters.query, '');
+        });
+      });
     });
   });
 });

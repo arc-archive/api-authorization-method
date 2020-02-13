@@ -12,6 +12,7 @@ export const validateCustom: Symbol;
 export const restoreCustom: Symbol;
 export const updateQueryParameterCustom: Symbol;
 export const updateHeaderCustom: Symbol;
+export const clearCustom: Symbol;
 
 export {CustomMethodMixin};
 

@@ -15,6 +15,7 @@ export const serializeCustom = Symbol();
 export const restoreCustom = Symbol();
 export const updateQueryParameterCustom = Symbol();
 export const updateHeaderCustom = Symbol();
+export const clearCustom = Symbol();
 const createViewModel = Symbol();
 const readParamsProperties = Symbol();
 const headersTemplate = Symbol();
@@ -104,6 +105,17 @@ export const CustomMethodMixin = (superClass) => class extends superClass {
         item.value = restored[name];
       }
     });
+  }
+
+  [clearCustom]() {
+    const headers = this[headersParam];
+    const queryParameters = this[queryParametersParam];
+    if (Array.isArray(headers)) {
+      headers.forEach((header) => header.value = '');
+    }
+    if (Array.isArray(queryParameters)) {
+      queryParameters.forEach((parameter) => parameter.value = '');
+    }
   }
 
   [serializeCustom]() {

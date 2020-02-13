@@ -14,6 +14,7 @@ import {
   restoreCustom,
   updateQueryParameterCustom,
   updateHeaderCustom,
+  clearCustom,
 } from './CustomMethodMixin.js';
 import {
   PassThroughMethodMixin,
@@ -24,6 +25,7 @@ import {
   validatePassThrough,
   updateQueryParameterPassThrough,
   updateHeaderPassThrough,
+  clearPassThrough,
 } from './PassThroughMethodMixin.js';
 import {
   ApiOauth1MethodMixin,
@@ -47,6 +49,7 @@ import {
   updateQueryParameterApiKey,
   updateHeaderApiKey,
   updateCookieApiKey,
+  clearApiKey,
 } from './ApiKeyMethodMixin.js';
 
 export const METHOD_CUSTOM = 'custom';
@@ -155,6 +158,19 @@ export class ApiAuthorizationMethod extends AmfHelperMixin(
       case METHOD_PASS_THROUGH: return this[validatePassThrough]();
       case METHOD_API_KEY: return this[validateApiKey]();
       default: return super.validate();
+    }
+  }
+
+  /**
+   * Clears settrings of currently selected method.
+   */
+  clear() {
+    const type = normalizeType(this.type);
+    switch(type) {
+      case METHOD_CUSTOM: this[clearCustom](); break;
+      case METHOD_PASS_THROUGH: this[clearPassThrough](); break;
+      case METHOD_API_KEY: this[clearApiKey](); break;
+      default: super.clear(); break;
     }
   }
 

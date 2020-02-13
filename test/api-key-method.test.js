@@ -356,6 +356,54 @@ describe('Api Key authorization', function() {
           await assert.isAccessible(element);
         });
       });
+
+      describe('clear()', () => {
+        let factory;
+        let amf;
+
+        before(async () => {
+          amf = await AmfLoader.load({ compact, fileName });
+          factory = document.createElement('api-view-model-transformer');
+        });
+
+        after(() => {
+          factory = null;
+        });
+
+        afterEach(() => {
+          factory.clearCache();
+        });
+
+        it('clears headers', async () => {
+          const element = await modelFixture(amf, '/header', 'get');
+          const input = element.shadowRoot.querySelector(`[name="client_secret"]`);
+          input.value = 'test';
+          input.dispatchEvent(new CustomEvent('input'));
+          element.clear();
+          const params = element.serialize();
+          assert.strictEqual(params.headers.client_secret, '');
+        });
+
+        it('clears query parameters', async () => {
+          const element = await modelFixture(amf, '/query', 'get');
+          const input = element.shadowRoot.querySelector(`[name="client_id"]`);
+          input.value = 'test';
+          input.dispatchEvent(new CustomEvent('input'));
+          element.clear();
+          const params = element.serialize();
+          assert.strictEqual(params.queryParameters.client_id, '');
+        });
+
+        it('clears cookie parameters', async () => {
+          const element = await modelFixture(amf, '/cookie', 'get');
+          const input = element.shadowRoot.querySelector(`[name="client_secret"]`);
+          input.value = 'test';
+          input.dispatchEvent(new CustomEvent('input'));
+          element.clear();
+          const params = element.serialize();
+          assert.strictEqual(params.cookies.client_secret, '');
+        });
+      });
     });
   });
 });

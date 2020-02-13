@@ -463,6 +463,47 @@ describe('RAML custom scheme', function() {
           await assert.isAccessible(element);
         });
       });
+
+      describe('clear()', () => {
+        let amf;
+        let factory;
+        let element;
+
+        before(async () => {
+          amf = await AmfLoader.load({ compact });
+          factory = document.createElement('api-view-model-transformer');
+        });
+
+        after(() => {
+          factory = null;
+        });
+
+        beforeEach(async () => {
+          element = await modelFixture(amf, '/custom1', 'get');
+        });
+
+        afterEach(() => {
+          factory.clearCache();
+        });
+
+        it('clears headers', () => {
+          const input = element.shadowRoot.querySelector(`[name="SpecialTokenHeader"]`);
+          input.value = 'test';
+          input.dispatchEvent(new CustomEvent('input'));
+          element.clear();
+          const params = element.serialize();
+          assert.strictEqual(params.headers.SpecialTokenHeader, '');
+        });
+
+        it('clears query parameters', () => {
+          const input = element.shadowRoot.querySelector(`[name="debugTokenParam"]`);
+          const option = input.shadowRoot.querySelector(`[data-value="Log"]`);
+          MockInteractions.tap(option);
+          element.clear();
+          const params = element.serialize();
+          assert.strictEqual(params.queryParameters.debugTokenParam, '');
+        });
+      });
     });
   });
 });

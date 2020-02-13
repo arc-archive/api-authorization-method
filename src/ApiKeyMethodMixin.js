@@ -25,6 +25,7 @@ export const renderApiKey = Symbol();
 export const updateQueryParameterApiKey = Symbol();
 export const updateHeaderApiKey = Symbol();
 export const updateCookieApiKey = Symbol();
+export const clearApiKey = Symbol();
 
 /**
  * The `api-view-model-transformer` has insternal caching enabled to support
@@ -167,6 +168,21 @@ export const ApiKeyMethodMixin = (superClass) => class extends superClass {
       cookieParameters.forEach((parameter) => result.cookies[parameter.name] = parameter.value);
     }
     return result;
+  }
+
+  [clearApiKey]() {
+    const headers = this[headersParam];
+    const queryParams = this[queryParam];
+    const cookieParameters = this[cookiesParam];
+    if (Array.isArray(headers)) {
+      headers.forEach((header) => header.value = '');
+    }
+    if (Array.isArray(queryParams)) {
+      queryParams.forEach((parameter) => parameter.value = '');
+    }
+    if (Array.isArray(cookieParameters)) {
+      cookieParameters.forEach((cookie) => cookie.value = '');
+    }
   }
 
   /**
