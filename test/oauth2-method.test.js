@@ -346,6 +346,131 @@ describe('OAuth 2', function() {
           assert.ok(node);
         });
       });
+
+      describe('OAS grant types (flows)', () => {
+        let amf;
+        let factory;
+        let element;
+
+        const fileName = 'oauth-flows';
+
+        before(async () => {
+          amf = await AmfLoader.load({ compact, fileName });
+          factory = document.createElement('api-view-model-transformer');
+        });
+
+        after(() => {
+          factory = null;
+        });
+
+        beforeEach(async () => {
+          element = await modelFixture(amf, '/pets', 'patch');
+        });
+
+        afterEach(() => {
+          factory.clearCache();
+        });
+
+        it('renders all defined grant types', () => {
+          assert.deepEqual(element.grantTypes, oauth2GrantTypes);
+        });
+
+        it('initializes first flow by default', () => {
+          assert.equal(element.grantType, 'implicit');
+        });
+
+        it('applies configuration when initializing', () => {
+          assert.equal(
+            element.authorizationUri,
+            'https://api.example.com/oauth2/authorize',
+            'authorizationUri is set'
+          );
+          assert.deepEqual(
+            element.scopes,
+            ['read_pets', 'write_pets'],
+            'scopes is set'
+          );
+        });
+
+        it('applies configuration on grant type change', async () => {
+          element.grantType = 'authorization_code';
+          await nextFrame();
+          assert.equal(
+            element.authorizationUri,
+            '/oauth2/authorize',
+            'authorizationUri is set'
+          );
+          assert.equal(
+            element.accessTokenUri,
+            '/oauth2/token',
+            'accessTokenUri is set'
+          );
+          assert.deepEqual(
+            element.scopes,
+            ['all'],
+            'scopes is set'
+          );
+        });
+
+        it('restores configuration when grant type is selected', async () => {
+          const security = AmfLoader.lookupSecurity(amf, '/pets', 'patch');
+          const element = await basicFixture(amf);
+          element.grantType = 'authorization_code';
+          await nextFrame();
+          element.security = security;
+          await nextFrame();
+          assert.equal(
+            element.grantType,
+            'authorization_code',
+            'grantType is not changed'
+          );
+          assert.equal(
+            element.authorizationUri,
+            '/oauth2/authorize',
+            'authorizationUri is set'
+          );
+          assert.equal(
+            element.accessTokenUri,
+            '/oauth2/token',
+            'accessTokenUri is set'
+          );
+          assert.deepEqual(
+            element.scopes,
+            ['all'],
+            'scopes is set'
+          );
+        });
+
+        it('applies client credentials grant type', async () => {
+          element.grantType = 'client_credentials';
+          await nextFrame();
+          assert.equal(
+            element.accessTokenUri,
+            '/oauth2/token-client',
+            'accessTokenUri is set'
+          );
+          assert.deepEqual(
+            element.scopes,
+            ['write_pets', 'read_pets'],
+            'scopes is set'
+          );
+        });
+
+        it('applies password grant type', async () => {
+          element.grantType = 'password';
+          await nextFrame();
+          assert.equal(
+            element.accessTokenUri,
+            '/oauth2/token-password',
+            'accessTokenUri is set'
+          );
+          assert.deepEqual(
+            element.scopes,
+            ['write_pets', 'read_pets'],
+            'scopes is set'
+          );
+        });
+      });
     });
   });
 });
