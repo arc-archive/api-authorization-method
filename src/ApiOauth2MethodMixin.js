@@ -70,7 +70,7 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
   get [securityScheme]() {
     const { security } = this;
     const shKey = this._getAmfKey(this.ns.aml.vocabularies.security.scheme);
-    let scheme = security[shKey];
+    let scheme = security && security[shKey];
     /* istanbul ignore if */
     if (!scheme) {
       return null;
