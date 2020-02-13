@@ -267,3 +267,35 @@
 * adding tests for OAS grant types (flows) [3a52bac](https://github.com/advanced-rest-client/api-authorization-method/commit/3a52bac25ee479cef3ce64bdfd08741eff590ee2) by Pawel
 
 
+<a name="0.1.5"></a>
+## [0.1.5](https://github.com/advanced-rest-client/api-authorization-method/compare/0.1.3...0.1.5) (2020-02-13)
+
+### Build
+
+* bumping version [03f021f](https://github.com/advanced-rest-client/api-authorization-method/commit/03f021f7c89362d59c681d8ff3aee0686b61d82a) by Pawel Psztyc
+* bumping version [66ae357](https://github.com/advanced-rest-client/api-authorization-method/commit/66ae357b6491ccabb64cd57bfb8a6a0351f06cae) by Pawel
+
+
+### Continuous integration
+
+* increasing mocha timeout to 10s [c1232da](https://github.com/advanced-rest-client/api-authorization-method/commit/c1232da37e5fbca90deec632f1b79ce4cab56585) by Pawel Psztyc
+
+
+### Update
+
+* adding types for API Key [eee282c](https://github.com/advanced-rest-client/api-authorization-method/commit/eee282c2198ac1d36eddc6c4f1b7957c600829f0) by Pawel Psztyc
+* [ci skip] automated merge master->stage. syncing main branches [cb66d03](https://github.com/advanced-rest-client/api-authorization-method/commit/cb66d03f5faedfe05b37825e53572d010009ee87) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [6254d5e](https://github.com/advanced-rest-client/api-authorization-method/commit/6254d5e44f9020e0ab1c0904e400ece1e611cb0e) by Ci agent
+
+
+### Features
+
+* adding `clear()` method [6c6298e](https://github.com/advanced-rest-client/api-authorization-method/commit/6c6298e1ecbf7255784993cf2838a631b7274fc7) by Pawel Psztyc
+* adding support for OAS bearer token [1206bb7](https://github.com/advanced-rest-client/api-authorization-method/commit/1206bb72285bdba763ec5a302d6a9b36c36a61dc) by Pawel
+
+
+### Testing
+
+* adding timeout command to SL tests [ee06589](https://github.com/advanced-rest-client/api-authorization-method/commit/ee0658974158730badd2980cf3a5153d94f93cb4) by Pawel
+
+
