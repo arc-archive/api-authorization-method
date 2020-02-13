@@ -1,7 +1,7 @@
 {
   "name": "@advanced-rest-client/api-authorization-method",
   "description": "An element to render an UI for various authorization methods with support of AMF data model for web APIs",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "Apache-2.0",
   "main": "index.js",
   "module": "index.js",
