@@ -177,3 +177,52 @@
 * finishing tests for custom schemes [7b2b056](https://github.com/advanced-rest-client/api-authorization-method/commit/7b2b056fb93b9ab44ba6d67a1dea45d58a220e3f) by Pawel Psztyc
 
 
+<a name="0.1.3"></a>
+## [0.1.3](https://github.com/advanced-rest-client/api-authorization-method/compare/0.1.1...0.1.3) (2020-02-13)
+
+### Build
+
+* bumping version [53b6597](https://github.com/advanced-rest-client/api-authorization-method/commit/53b659707bf4ee3998fe66a9da77030bc5ccc0e9) by Pawel
+* bumping version [63d1bb3](https://github.com/advanced-rest-client/api-authorization-method/commit/63d1bb3ae638460d59cc00861e8f516d1f9b6176) by Pawel Psztyc
+
+
+### Continuous integration
+
+* updated Travis configuration to connect to Sauce Labs [0cee240](https://github.com/advanced-rest-client/api-authorization-method/commit/0cee2407211a2925285693a6d9ef63f83f2ae9ff) by Pawel Psztyc
+* updating travis config [9d681dc](https://github.com/advanced-rest-client/api-authorization-method/commit/9d681dc9cb9e0de5e0562bbc4ada9af8898099b5) by Pawel Psztyc
+
+
+### Update
+
+* updating husky [119e735](https://github.com/advanced-rest-client/api-authorization-method/commit/119e735901d2d3772faaf4f1a7d26eb5b89df310) by Pawel
+* adding a function to check whether model is a RAML model [ff49fe0](https://github.com/advanced-rest-client/api-authorization-method/commit/ff49fe0225cb9c1595b7f687d27e1777791bf97e) by Pawel
+* adding forces settings reset after grant types are updated [28d638d](https://github.com/advanced-rest-client/api-authorization-method/commit/28d638ddbaacee0ee4c8f26fd993c932fa666b93) by Pawel
+* updating husky [385bdaf](https://github.com/advanced-rest-client/api-authorization-method/commit/385bdafb8d7cd1d41d4a212480d7c050cd65dcbf) by Pawel
+* adding support for OAS' OAuth 2 flows [6622175](https://github.com/advanced-rest-client/api-authorization-method/commit/662217520500bdc5df250a17b8fc136e2f460f22) by Pawel Psztyc
+* [ci skip] automated merge master->stage. syncing main branches [6c0c260](https://github.com/advanced-rest-client/api-authorization-method/commit/6c0c260ba5664a4e8fd7ae018b7360d740d511ef) by Ci agent
+* upgrading amf-helper-mixin [15803b9](https://github.com/advanced-rest-client/api-authorization-method/commit/15803b90cbdb132e84ed6a0ae2a927e9f859a915) by Pawel Psztyc
+* [ci skip] automated merge master->stage. syncing main branches [16abb12](https://github.com/advanced-rest-client/api-authorization-method/commit/16abb129a7d2842d812ee29fd2bac46319925cf1) by Ci agent
+* upgrading depdnencies [b15014b](https://github.com/advanced-rest-client/api-authorization-method/commit/b15014ba7668af23fd700f09288e71798e274607) by Pawel Psztyc
+* updating dependencies [790fa8e](https://github.com/advanced-rest-client/api-authorization-method/commit/790fa8ec095c420ba4f3befbb880bce3bb08b880) by Pawel Psztyc
+
+
+### Documentation
+
+* updating readme file [947edd0](https://github.com/advanced-rest-client/api-authorization-method/commit/947edd0834619c5a6c5fdb45708106e22a4936b7) by Pawel
+
+
+### Features
+
+* adding OAS' Api Key scheme [ea24e9a](https://github.com/advanced-rest-client/api-authorization-method/commit/ea24e9a36cb4915607d4f46f30b4a70269ff9c63) by Pawel Psztyc
+
+
+### Bug Fixes
+
+* adding type check for security settings [999e77c](https://github.com/advanced-rest-client/api-authorization-method/commit/999e77c5fc487250af06f9affbd00245deb96b0c) by Pawel
+
+
+### Testing
+
+* adding tests for OAS grant types (flows) [3a52bac](https://github.com/advanced-rest-client/api-authorization-method/commit/3a52bac25ee479cef3ce64bdfd08741eff590ee2) by Pawel
+
+
