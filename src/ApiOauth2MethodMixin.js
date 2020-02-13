@@ -298,6 +298,8 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       this.grantType = available[0].type;
     } else if (available.length === 1) {
       this.grantType = available[0].type;
+    } else {
+      this[applyFlow](current);
     }
   }
   /**
