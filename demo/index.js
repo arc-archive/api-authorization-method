@@ -137,6 +137,7 @@ class DemoPage extends ApiDemoPageBase {
     return [
       ['demo-api', 'Demo API'],
       ['api-keys', 'API key'],
+      ['oauth-flows', 'OAS OAuth Flow'],
     ].map(([file, label]) => html`
       <paper-item data-src="${file}-compact.json">${label} - compact model</paper-item>
       <paper-item data-src="${file}.json">${label}</paper-item>

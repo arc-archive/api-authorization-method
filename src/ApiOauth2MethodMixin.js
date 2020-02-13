@@ -19,6 +19,7 @@ const setupOAuthDeliveryMethod = Symbol();
 const getOauth2DeliveryMethod = Symbol();
 const updateGrantTypes = Symbol();
 const preFillAmfData = Symbol();
+const preFillFlowData = Symbol();
 const readSecurityScopes = Symbol();
 const amfCustomSettingsKey = Symbol();
 const applyAnnotationGrants = Symbol();
@@ -40,6 +41,13 @@ const tokenQueryParameters = Symbol();
 const tokenHeaders = Symbol();
 const tokenBody = Symbol();
 const customValueHandler = Symbol();
+const flowForType = Symbol();
+const readFlowScopes = Symbol();
+const readFlowsTypes = Symbol();
+const applyFlow = Symbol();
+const securityScheme = Symbol();
+const isRamlFlow = Symbol();
+
 /**
  * Mixin that adds support for RAML's custom auth method computations
  *
@@ -48,6 +56,33 @@ const customValueHandler = Symbol();
  * @mixin
  */
 export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
+  get grantType() {
+    return super.grantType;
+  }
+
+  set grantType(value) {
+    const old = super.grantType;
+    super.grantType = value;
+    if (old !== value) {
+      this[applyFlow](value);
+    }
+  }
+
+  get [securityScheme]() {
+    const { security } = this;
+    const shKey = this._getAmfKey(this.ns.aml.vocabularies.security.scheme);
+    let scheme = security && security[shKey];
+    /* istanbul ignore if */
+    if (!scheme) {
+      return null;
+    }
+    /* istanbul ignore else */
+    if (scheme && Array.isArray(scheme)) {
+      scheme = scheme[0];
+    }
+    return scheme;
+  }
+
   [initializeOauth2Model]() {
     const { security } = this;
     if (!this._hasType(security, this.ns.aml.vocabularies.security.ParametrizedSecurityScheme)) {
@@ -55,21 +90,12 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       this[updateGrantTypes]();
       return;
     }
-    const shKey = this._getAmfKey(this.ns.aml.vocabularies.security.scheme);
-    let scheme = security[shKey];
+    const scheme = this[securityScheme];
     /* istanbul ignore if */
     if (!scheme) {
       return;
     }
-    let type;
-    /* istanbul ignore else */
-    if (scheme) {
-      /* istanbul ignore else */
-      if (Array.isArray(scheme)) {
-        scheme = scheme[0];
-      }
-      type = this._getValue(scheme, this.ns.aml.vocabularies.security.type);
-    }
+    const type = this._getValue(scheme, this.ns.aml.vocabularies.security.type);
     const isOauth2 = type === 'OAuth 2.0';
     if (!isOauth2) {
       this[setupOAuthDeliveryMethod]();
@@ -273,6 +299,8 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
       this.grantType = available[0].type;
     } else if (available.length === 1) {
       this.grantType = available[0].type;
+    } else {
+      this[applyFlow](current);
     }
   }
   /**
@@ -308,6 +336,46 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     }
     return defaults;
   }
+
+  /**
+   * It's quite a bit naive approach to determine whether given model is RAML's
+   * or OAS'. There is a significant difference of how to treat grant types
+   * (in OAS it is called flows). While in OAS it is mandaroty to define a grant type
+   * (a flow) RAML has no such requirement. By default this component assumes that
+   * all standard (OAuth 2 defined) grant types are supported when grant types are not
+   * defined. So it is possible to not define them and the component will work.
+   * However, in the AMF model there's always at least one grant type (a flow) whether
+   * it's RAML's or OAS' and whether grant type is defined or not.
+   *
+   * To apply correct settings this component needs to know how to process the data.
+   * If it's OAS then when changing grant type it also changes current settings
+   * (like scopes, auth uri, etc). If the model is RAML's then change in current grant type
+   * won't trigger settings setup.
+   *
+   * Note, this function returns true when there's no flows whatsoever. It's not
+   * really what it means but it is consistent with component's logic.
+   *
+   * Current method is deterministic and when AMF model change this most probably stop
+   * working. It tests whether there's a single grant type and this grant type
+   * has no AMF's `security:flow` property.
+   *
+   * @param {Array<Object>} flows List of current flows loaded with the AMF model.
+   * @return {Boolean} True if current model should be treated as RAML's model.
+   */
+  [isRamlFlow](flows) {
+    if (!Array.isArray(flows)) {
+      return true;
+    }
+    let result = false;
+    if (flows.length === 1) {
+      const type = this._getValue(flows[0], this.ns.aml.vocabularies.security.flow);
+      if (!type) {
+        result = true;
+      }
+    }
+    return result;
+  }
+
   /**
    * Reads API security definition and applies in to the view as predefined
    * values.
@@ -323,18 +391,16 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     if (!this._hasType(model, sec.OAuth2Settings)) {
       return;
     }
-    /* TODO this is temporary in order to support AMF 4 model change.
-        We need to fully support all flows later on rather than just the first */
-    let possibleFlowsNode = this._getValueArray(model, sec.flows);
-    if (possibleFlowsNode && Array.isArray(possibleFlowsNode)) {
-      possibleFlowsNode = possibleFlowsNode[0];
-    } else {
-      possibleFlowsNode = model;
+    const flows = this._getValueArray(model, sec.flows);
+    if (Array.isArray(flows) && !this[isRamlFlow](flows)) {
+      this[preFillFlowData](flows);
+      return;
     }
 
-    this.authorizationUri = this._getValue(possibleFlowsNode, sec.authorizationUri) || '';
-    this.accessTokenUri = this._getValue(possibleFlowsNode, sec.accessTokenUri) || '';
-    this.scopes = this[readSecurityScopes](possibleFlowsNode[this._getAmfKey(sec.scope)]);
+    const flow = flows && flows.length ? flows[0] : model;
+    this.authorizationUri = this._getValue(flow, sec.authorizationUri) || '';
+    this.accessTokenUri = this._getValue(flow, sec.accessTokenUri) || '';
+    this.scopes = this[readSecurityScopes](flow[this._getAmfKey(sec.scope)]);
     const apiGrants = this._getValueArray(model, sec.authorizationGrant);
     // TODO check if this also needs to come from `possibleFlowsNode`
     const annotationKey = this[amfCustomSettingsKey](model);
@@ -352,6 +418,153 @@ export const ApiOauth2MethodMixin = (superClass) => class extends superClass {
     }
     this[setupAnotationParameters](annotation);
   }
+
+  /**
+   * Prefils authorization data with OAS' definition of a grant type
+   * which they call a flow. This method populates form with the information
+   * find in the model.
+   *
+   * It tries to match a flow to currently selected `grantType`. When no match
+   * then it takes first flow.
+   *
+   * Note, flow data are applied when `grantType` change.
+   *
+   * @param {Array<Object>} flows List of flows in the authorization description.
+   */
+  [preFillFlowData](flows) {
+    // first step is to select the right flow.
+    // If the user already selected a grant type before then it this looks
+    // for a flow for already selected grant type. If its not present then
+    // it uses first available flow.
+    let flow = this[flowForType](flows, this.grantType);
+    if (!flow) {
+      flow = flows[0];
+    }
+    // finally sets grant types from flows
+    const grantTypes = this[readFlowsTypes](flows);
+    this[updateGrantTypes](grantTypes);
+  }
+
+  /**
+   * Searches for a flow in the list of flows for given name.
+   *
+   * @param {Array<Object>} flows List of flows to search in.
+   * @param {String?} type Grant type
+   * @return {Object|undefined}
+   */
+  [flowForType](flows, type) {
+    if (!type) {
+      return;
+    }
+    for (let i = 0, len = flows.length; i < len; i++) {
+      const flow = flows[i];
+      const flowType = this._getValue(flow, this.ns.aml.vocabularies.security.flow);
+      if (flowType === type) {
+        // true for `implicit`, `password`
+        return flow;
+      }
+      if (type === 'authorization_code' && flowType === 'authorizationCode') {
+        return flow;
+      }
+      if (type === 'client_credentials' && flowType === 'clientCredentials') {
+        return flow;
+      }
+    }
+  }
+
+  /**
+   * Reads list of scopes from a flow.
+   *
+   * @param {Object} flow A flow to process.
+   * @return {Array<String>} List of scopes required by an endpoint / API.
+   */
+  [readFlowScopes](flow) {
+    const { security } = this;
+    const scopeKey = this._getAmfKey(this.ns.aml.vocabularies.security.scope);
+    let scopes = this[readSecurityScopes](flow[scopeKey]);
+    if (scopes || !security) {
+      return scopes;
+    }
+    // if scopes are not defined in the opteration then they may be defined in
+    // security settings.
+    const sKey = this._getAmfKey(this.ns.aml.vocabularies.security.settings);
+    let settings = security[sKey];
+    /* istanbul ignore else */
+    if (Array.isArray(settings)) {
+      settings = settings[0];
+    }
+    let mainFlow = this._getValueArray(settings, this.ns.aml.vocabularies.security.flows);
+    /* istanbul ignore else */
+    if (Array.isArray(mainFlow)) {
+      mainFlow = mainFlow[0];
+    }
+    if (mainFlow) {
+      scopes = this[readSecurityScopes](mainFlow[scopeKey]);
+    }
+    return scopes;
+  }
+
+  /**
+   * Reads list of grant types from the list of flows.
+   *
+   * @param {Array<Object>} flows List of flows to process.
+   * @return {Array<String>} Grant types cupported by this authorization.
+   */
+  [readFlowsTypes](flows) {
+    const sec = this.ns.aml.vocabularies.security;
+    const grants = [];
+    for (let i = 0; i < flows.length; i++) {
+      const flow = flows[i];
+      let type = this._getValue(flow, sec.flow);
+      if (type === 'authorizationCode') {
+        type = 'authorization_code';
+      } else if (type === 'clientCredentials') {
+        type = 'client_credentials';
+      }
+      grants[grants.length] = type;
+    }
+    return grants;
+  }
+
+  /**
+   * Applies settings from a flow to current properties.
+   * OAS' flows may define different configuration for each flow.
+   * This function is called each time a grant type change. If current settings
+   * does not contain flows then this is ignored.
+   *
+   * @param {?String} name Set grant type
+   */
+  [applyFlow](name) {
+    if (!name) {
+      return;
+    }
+    const scheme = this[securityScheme];
+    if (!scheme) {
+      return;
+    }
+    const sKey = this._getAmfKey(this.ns.aml.vocabularies.security.settings);
+    let settings = scheme[sKey];
+    /* istanbul ignore else */
+    if (Array.isArray(settings)) {
+      settings = settings[0];
+    }
+    const sec = this.ns.aml.vocabularies.security;
+    const flows = this._getValueArray(settings, sec.flows);
+    if (!Array.isArray(flows) || this[isRamlFlow](flows)) {
+      return;
+    }
+    if (name === 'client_credentials') {
+      name = 'clientCredentials';
+    } else if (name === 'authorization_code') {
+      name = 'authorizationCode';
+    }
+    const flow = flows.find((flow) => this._getValue(flow, sec.flow) === name);
+    // sets basic oauth properties.
+    this.scopes = flow ? this[readFlowScopes](flow) : [];
+    this.authorizationUri = this._getValue(flow, sec.authorizationUri) || '';
+    this.accessTokenUri = this._getValue(flow, sec.accessTokenUri) || '';
+  }
+
   /**
    * Extracts scopes list from the security definition
    * @param {Array} model
