@@ -226,3 +226,44 @@
 * adding tests for OAS grant types (flows) [3a52bac](https://github.com/advanced-rest-client/api-authorization-method/commit/3a52bac25ee479cef3ce64bdfd08741eff590ee2) by Pawel
 
 
+<a name="0.1.4"></a>
+## [0.1.4](https://github.com/advanced-rest-client/api-authorization-method/compare/0.1.2...0.1.4) (2020-02-13)
+
+### Build
+
+* bumping version [66ae357](https://github.com/advanced-rest-client/api-authorization-method/commit/66ae357b6491ccabb64cd57bfb8a6a0351f06cae) by Pawel
+* bumping version [53b6597](https://github.com/advanced-rest-client/api-authorization-method/commit/53b659707bf4ee3998fe66a9da77030bc5ccc0e9) by Pawel
+
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [6254d5e](https://github.com/advanced-rest-client/api-authorization-method/commit/6254d5e44f9020e0ab1c0904e400ece1e611cb0e) by Ci agent
+* updating husky [119e735](https://github.com/advanced-rest-client/api-authorization-method/commit/119e735901d2d3772faaf4f1a7d26eb5b89df310) by Pawel
+* adding a function to check whether model is a RAML model [ff49fe0](https://github.com/advanced-rest-client/api-authorization-method/commit/ff49fe0225cb9c1595b7f687d27e1777791bf97e) by Pawel
+* adding forces settings reset after grant types are updated [28d638d](https://github.com/advanced-rest-client/api-authorization-method/commit/28d638ddbaacee0ee4c8f26fd993c932fa666b93) by Pawel
+* updating husky [385bdaf](https://github.com/advanced-rest-client/api-authorization-method/commit/385bdafb8d7cd1d41d4a212480d7c050cd65dcbf) by Pawel
+* adding support for OAS' OAuth 2 flows [6622175](https://github.com/advanced-rest-client/api-authorization-method/commit/662217520500bdc5df250a17b8fc136e2f460f22) by Pawel Psztyc
+* [ci skip] automated merge master->stage. syncing main branches [6c0c260](https://github.com/advanced-rest-client/api-authorization-method/commit/6c0c260ba5664a4e8fd7ae018b7360d740d511ef) by Ci agent
+
+
+### Documentation
+
+* updating readme file [947edd0](https://github.com/advanced-rest-client/api-authorization-method/commit/947edd0834619c5a6c5fdb45708106e22a4936b7) by Pawel
+
+
+### Features
+
+* adding support for OAS bearer token [1206bb7](https://github.com/advanced-rest-client/api-authorization-method/commit/1206bb72285bdba763ec5a302d6a9b36c36a61dc) by Pawel
+
+
+### Bug Fixes
+
+* adding type check for security settings [999e77c](https://github.com/advanced-rest-client/api-authorization-method/commit/999e77c5fc487250af06f9affbd00245deb96b0c) by Pawel
+
+
+### Testing
+
+* adding timeout command to SL tests [ee06589](https://github.com/advanced-rest-client/api-authorization-method/commit/ee0658974158730badd2980cf3a5153d94f93cb4) by Pawel
+* adding tests for OAS grant types (flows) [3a52bac](https://github.com/advanced-rest-client/api-authorization-method/commit/3a52bac25ee479cef3ce64bdfd08741eff590ee2) by Pawel
+
+
