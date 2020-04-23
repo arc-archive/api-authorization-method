@@ -299,3 +299,37 @@
 * adding timeout command to SL tests [ee06589](https://github.com/advanced-rest-client/api-authorization-method/commit/ee0658974158730badd2980cf3a5153d94f93cb4) by Pawel
 
 
+<a name="0.2.0"></a>
+## [0.2.0](https://github.com/advanced-rest-client/api-authorization-method/compare/0.1.4...0.2.0) (2020-04-23)
+
+### Build
+
+* bumping version [e23bef2](https://github.com/advanced-rest-client/api-authorization-method/commit/e23bef2ddb190f6a65f71f0afc2e223144d00453) by Pawel
+* bumping version [03f021f](https://github.com/advanced-rest-client/api-authorization-method/commit/03f021f7c89362d59c681d8ff3aee0686b61d82a) by Pawel Psztyc
+
+
+### Continuous integration
+
+* increasing mocha timeout to 10s [c1232da](https://github.com/advanced-rest-client/api-authorization-method/commit/c1232da37e5fbca90deec632f1b79ce4cab56585) by Pawel Psztyc
+
+
+### Update
+
+* removing generated models from the repo [b8ad1db](https://github.com/advanced-rest-client/api-authorization-method/commit/b8ad1db79548186f4909bbf02b02af993800e388) by Pawel
+* upgrading demo page [cf904c7](https://github.com/advanced-rest-client/api-authorization-method/commit/cf904c7fb54b6460cba67ca7f9f0dc32a1c50de6) by Pawel
+* upgrading dependencies [4af067e](https://github.com/advanced-rest-client/api-authorization-method/commit/4af067e1f907b622f22a56bdfa187928f713340d) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [4e2ea24](https://github.com/advanced-rest-client/api-authorization-method/commit/4e2ea248a622a73c5c4ce35f7049c63c79c27c55) by Ci agent
+* adding types for API Key [eee282c](https://github.com/advanced-rest-client/api-authorization-method/commit/eee282c2198ac1d36eddc6c4f1b7957c600829f0) by Pawel Psztyc
+* [ci skip] automated merge master->stage. syncing main branches [cb66d03](https://github.com/advanced-rest-client/api-authorization-method/commit/cb66d03f5faedfe05b37825e53572d010009ee87) by Ci agent
+
+
+### Features
+
+* adding `clear()` method [6c6298e](https://github.com/advanced-rest-client/api-authorization-method/commit/6c6298e1ecbf7255784993cf2838a631b7274fc7) by Pawel Psztyc
+
+
+### Refactor
+
+* renamig the package to match other API elements [bce81f5](https://github.com/advanced-rest-client/api-authorization-method/commit/bce81f572344b9e2d1bbf60e80624fda8d514f8d) by Pawel
+
+
