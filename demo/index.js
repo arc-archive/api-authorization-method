@@ -1,15 +1,11 @@
-import { html, LitElement } from 'lit-element';
-import { ApiDemoPageBase } from '@advanced-rest-client/arc-demo-helper/ApiDemoPage.js';
-import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
+import { html } from 'lit-element';
+import { ApiDemoPage } from '@advanced-rest-client/arc-demo-helper';
 import '@advanced-rest-client/arc-demo-helper/arc-interactive-demo.js';
 import '@advanced-rest-client/oauth-authorization/oauth2-authorization.js';
 import '@api-components/api-navigation/api-navigation.js';
 import '../api-authorization-method.js';
 
-class DemoElement extends AmfHelperMixin(LitElement) {}
-window.customElements.define('demo-element', DemoElement);
-
-class DemoPage extends ApiDemoPageBase {
+class DemoPage extends ApiDemoPage {
   constructor() {
     super();
     this.initObservableProperties([
@@ -24,7 +20,7 @@ class DemoPage extends ApiDemoPageBase {
       'oauth2ChangesCounter',
       'security',
     ]);
-    this._componentName = 'api-authorization-method';
+    this.componentName = 'api-authorization-method';
     this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
     this.demoState = 0;
     this.mainChangesCounter = 0;
@@ -40,10 +36,6 @@ class DemoPage extends ApiDemoPageBase {
     ];
     this.authorizationUri = `${location.protocol}//${location.host}${location.pathname}oauth-authorize.html`;
 
-    this._demoStateHandler = this._demoStateHandler.bind(this);
-    this._toggleMainOption = this._toggleMainOption.bind(this);
-    this._toggleMainOption = this._toggleMainOption.bind(this);
-    this._authTypeHandler = this._authTypeHandler.bind(this);
     this._mainChangeHandler = this._mainChangeHandler.bind(this);
     this._basicChangeHandler = this._basicChangeHandler.bind(this);
     this._ntlmChangeHandler = this._ntlmChangeHandler.bind(this);
@@ -54,23 +46,12 @@ class DemoPage extends ApiDemoPageBase {
     window.addEventListener('oauth1-token-requested', this._oauth1TokenHandler.bind(this));
   }
 
-  _toggleMainOption(e) {
-    const { name, checked } = e.target;
-    this[name] = checked;
-  }
-
   _demoStateHandler(e) {
     const state = e.detail.value;
     this.demoState = state;
     this.outlined = state === 1;
     this.compatibility = state === 2;
-  }
-
-  get helper() {
-    if (!this.__helper) {
-      this.__helper = document.getElementById('helper');
-    }
-    return this.__helper;
+    this._updateCompatibility();
   }
 
   get type() {
@@ -105,14 +86,13 @@ class DemoPage extends ApiDemoPageBase {
   }
 
   setData(selected) {
-    const helper = this.helper;
-    const sec = helper.ns.aml.vocabularies.security;
-    const webApi = helper._computeWebApi(this.amf);
-    const method = helper._computeMethodModel(webApi, selected);
-    const key = helper._getAmfKey(sec.security);
-    const shKey = helper._getAmfKey(sec.scheme);
-    const schemesKey = helper._getAmfKey(sec.schemes);
-    const security = helper._ensureArray(method[key]);
+    const sec = this.ns.aml.vocabularies.security;
+    const webApi = this._computeWebApi(this.amf);
+    const method = this._computeMethodModel(webApi, selected);
+    const key = this._getAmfKey(sec.security);
+    const shKey = this._getAmfKey(sec.scheme);
+    const schemesKey = this._getAmfKey(sec.schemes);
+    const security = this._ensureArray(method[key]);
     let auth;
     let type;
     for (let i = 0, len = security.length; i < len; i++) {
@@ -127,13 +107,13 @@ class DemoPage extends ApiDemoPageBase {
         scheme = scheme[0];
       }
       auth = requirement;
-      type = helper._getValue(scheme, sec.type);
+      type = this._getValue(scheme, sec.type);
       if (type === 'Api Key') {
         auth = schemes;
       } else if (type === 'http') {
-        const settingsKey = helper._getAmfKey(sec.settings);
-        const settings = helper._ensureArray(scheme[settingsKey])[0];
-        type = helper._getValue(settings, sec.scheme);
+        const settingsKey = this._getAmfKey(sec.settings);
+        const settings = this._ensureArray(scheme[settingsKey])[0];
+        type = this._getValue(settings, sec.scheme);
       }
       break;
     }
@@ -148,17 +128,9 @@ class DemoPage extends ApiDemoPageBase {
       ['oauth-flows', 'OAS OAuth Flow'],
       ['oas-bearer', 'OAS Bearer'],
     ].map(([file, label]) => html`
-      <paper-item data-src="${file}-compact.json">${label} - compact model</paper-item>
-      <paper-item data-src="${file}.json">${label}</paper-item>
+      <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
+      <anypoint-item data-src="${file}.json">${label}</anypoint-item>
       `);
-  }
-
-  _authTypeHandler(e) {
-    const { name, checked, value } = e.target;
-    if (!checked) {
-      return;
-    }
-    this[name] = value;
   }
 
   _mainChangeHandler(e) {
@@ -238,44 +210,6 @@ class DemoPage extends ApiDemoPageBase {
             slot="content"
             @change="${this._mainChangeHandler}"
           ></api-authorization-method>
-
-          <label slot="options" id="listTypeLabel">Auth type</label>
-          <anypoint-radio-group
-            slot="options"
-            selectable="anypoint-radio-button"
-            aria-labelledby="listTypeLabel"
-          >
-            <anypoint-radio-button
-              @change="${this._authTypeHandler}"
-              checked
-              name="authType"
-              value="basic"
-              >Basic</anypoint-radio-button
-            >
-            <anypoint-radio-button
-              @change="${this._authTypeHandler}"
-              name="authType"
-              value="ntlm"
-              >NTLM</anypoint-radio-button
-            >
-            <anypoint-radio-button
-              @change="${this._authTypeHandler}"
-              name="authType"
-              value="digest"
-              >Digest</anypoint-radio-button
-            >
-            <anypoint-radio-button
-              @change="${this._authTypeHandler}"
-              name="authType"
-              value="oauth 1"
-              >OAuth 1</anypoint-radio-button
-            >
-            <anypoint-radio-button
-              @change="${this._authTypeHandler}"
-              name="authType"
-              value="oauth 2"
-              >OAuth 2</anypoint-radio-button
-            >
         </arc-interactive-demo>
         <p>Change events counter: ${mainChangesCounter}</p>
       </section>
@@ -283,11 +217,8 @@ class DemoPage extends ApiDemoPageBase {
   }
 
   contentTemplate() {
-    const { amf } = this;
     return html`
       <oauth2-authorization></oauth2-authorization>
-      <demo-element id="helper" .amf="${amf}"></demo-element>
-
       <h2>API authorization method</h2>
       ${this._demoTemplate()}
     `;
