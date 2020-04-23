@@ -43,7 +43,7 @@
     "test:update-snapshots": "karma start --update-snapshots",
     "test:prune-snapshots": "karma start --prune-snapshots",
     "test:sl": "karma start karma.sl.config.js  --compatibility auto --coverage --timeout 9000",
-    "generate-model": "node demo/model.js"
+    "prepare": "node demo/model.js"
   },
   "dependencies": {
     "@advanced-rest-client/arc-icons": "^3.0.5",
