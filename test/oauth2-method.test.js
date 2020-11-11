@@ -1,14 +1,15 @@
 import { fixture, assert, aTimeout, nextFrame, html } from '@open-wc/testing';
-import { AmfLoader } from './amf-loader.js';
 import {
   oauth2GrantTypes,
 } from '@advanced-rest-client/authorization-method/src/Oauth2MethodMixin.js';
 import * as MockInteractions from '@polymer/iron-test-helpers/mock-interactions.js';
+import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
+import { AmfLoader } from './amf-loader.js';
 import '../api-authorization-method.js';
 
 describe('OAuth 2', function() {
   async function basicFixture(amf, security) {
-    return (await fixture(html`<api-authorization-method
+    return (fixture(html`<api-authorization-method
       type="oauth 2"
       .amf="${amf}"
       .security="${security}"

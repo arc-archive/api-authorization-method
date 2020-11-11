@@ -1,7 +1,8 @@
 import { fixture, assert, aTimeout, nextFrame, html } from '@open-wc/testing';
-import { AmfLoader } from './amf-loader.js';
 import * as sinon from 'sinon';
 import * as MockInteractions from '@polymer/iron-test-helpers/mock-interactions.js';
+import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
+import { AmfLoader } from './amf-loader.js';
 import '../api-authorization-method.js';
 
 describe('RAML custom scheme', function() {

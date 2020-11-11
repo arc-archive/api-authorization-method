@@ -1,8 +1,9 @@
 import { fixture, assert, aTimeout, nextFrame, html } from '@open-wc/testing';
-import { AmfLoader } from './amf-loader.js';
+import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
 import {
   defaultSignatureMethods,
 } from '@advanced-rest-client/authorization-method/src/Oauth1MethodMixin.js';
+import { AmfLoader } from './amf-loader.js';
 import '../api-authorization-method.js';
 
 describe('OAuth 1', function() {

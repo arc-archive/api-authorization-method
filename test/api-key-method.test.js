@@ -1,6 +1,7 @@
 import { fixture, assert, aTimeout, nextFrame, html } from '@open-wc/testing';
-import { AmfLoader } from './amf-loader.js';
+import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
 import * as sinon from 'sinon';
+import { AmfLoader } from './amf-loader.js';
 import '../api-authorization-method.js';
 
 describe('Api Key authorization', function() {
