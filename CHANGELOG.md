@@ -333,3 +333,36 @@
 * renamig the package to match other API elements [bce81f5](https://github.com/advanced-rest-client/api-authorization-method/commit/bce81f572344b9e2d1bbf60e80624fda8d514f8d) by Pawel
 
 
+<a name="0.3.0"></a>
+## [0.3.0](https://github.com/advanced-rest-client/api-authorization-method/compare/0.1.5...0.3.0) (2020-11-12)
+
+### Build
+
+* bumping version [e23bef2](https://github.com/advanced-rest-client/api-authorization-method/commit/e23bef2ddb190f6a65f71f0afc2e223144d00453) by Pawel
+
+
+### Continuous integration
+
+* adding GH actions [4bbda32](https://github.com/advanced-rest-client/api-authorization-method/commit/4bbda327a969d0f8f9be70fc1657b23666ff90b9) by Pawel
+
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [355feb2](https://github.com/advanced-rest-client/api-authorization-method/commit/355feb2957c51885150beb83c93b65d6dbb39865) by Ci agent
+* removing generated models from the repo [b8ad1db](https://github.com/advanced-rest-client/api-authorization-method/commit/b8ad1db79548186f4909bbf02b02af993800e388) by Pawel
+* upgrading demo page [cf904c7](https://github.com/advanced-rest-client/api-authorization-method/commit/cf904c7fb54b6460cba67ca7f9f0dc32a1c50de6) by Pawel
+* upgrading dependencies [4af067e](https://github.com/advanced-rest-client/api-authorization-method/commit/4af067e1f907b622f22a56bdfa187928f713340d) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [4e2ea24](https://github.com/advanced-rest-client/api-authorization-method/commit/4e2ea248a622a73c5c4ce35f7049c63c79c27c55) by Ci agent
+
+
+### Features
+
+* fixes #1 Add support for PKCE for OAuth 2 [67ab4bf](https://github.com/advanced-rest-client/api-authorization-method/commit/67ab4bf6a95d0be3b52cc77179ab6000d5e211ea) by Pawel
+
+
+### Refactor
+
+* upgrading to arc types [dfb04b0](https://github.com/advanced-rest-client/api-authorization-method/commit/dfb04b0f7689d00b1d2571b713d6be693be1bdea) by Pawel
+* renamig the package to match other API elements [bce81f5](https://github.com/advanced-rest-client/api-authorization-method/commit/bce81f572344b9e2d1bbf60e80624fda8d514f8d) by Pawel
+
+
