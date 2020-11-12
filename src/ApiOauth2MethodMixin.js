@@ -57,6 +57,7 @@ export const readFlowsTypes = Symbol('readFlowsTypes');
 export const applyFlow = Symbol('applyFlow');
 export const securityScheme = Symbol('securityScheme');
 export const isRamlFlow = Symbol('isRamlFlow');
+export const readPkceValue = Symbol('readPkceValue');
 
 /**
  * @param {ApiAuthorizationMethod} base
@@ -88,6 +89,11 @@ const mxFunction = (base) => {
         [scheme] = scheme;
       }
       return scheme;
+    }
+
+    constructor() {
+      super();
+      this.noPkce = true;
     }
 
     [initializeOauth2Model]() {
@@ -434,6 +440,7 @@ const mxFunction = (base) => {
         this[updateGrantTypes]();
       }
       this[setupAnnotationParameters](annotation);
+      this.pkce = this[readPkceValue](model);
     }
 
     /**
@@ -862,6 +869,32 @@ const mxFunction = (base) => {
       // @ts-ignore
       model[index].docsOpened = !model[index].docsOpened;
       this.requestUpdate();
+    }
+
+    /**
+     * Checks whether the security scheme is annotated with the `pkce` annotation.
+     * This annotation is published at https://github.com/raml-org/raml-annotations/tree/master/annotations/security-schemes
+     * @param {any} model Model for the security settings
+     * @returns {boolean|undefined} True if the security settings are annotated with PKCE extension
+     */
+    [readPkceValue](model) {
+      const key = this._getAmfKey(this.ns.aml.vocabularies.document.customDomainProperties);
+      if (typeof model[key] === 'undefined') {
+        return undefined;
+      }
+      const values = this._ensureArray(model[key]);
+      for (let i = 0, len = values.length; i < len; i++) {
+        let id = /** @type string */ (this._getValue(values[i], '@id'));
+        if (!id.startsWith('amf://id')) {
+          id = `amf://id${id}`;
+        }
+        const node = model[id];
+        const extensionNameKey = this._getAmfKey(this.ns.aml.vocabularies.core.extensionName);
+        if (this._getValue(node, extensionNameKey) === 'pkce') {
+          return this._getValue(node, this.ns.aml.vocabularies.data.value) === 'true';
+        }
+      }
+      return undefined;
     }
 
     [oauth2CustomPropertiesTemplate]() {

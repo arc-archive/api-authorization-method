@@ -55,7 +55,7 @@
     "@open-wc/eslint-config": "^4.0.1",
     "@open-wc/testing": "^2.5.32",
     "@polymer/iron-test-helpers": "^3.0.1",
-    "@web/test-runner": "^0.9.7",
+    "@web/test-runner": "^0.9.8",
     "@web/test-runner-playwright": "^0.6.4",
     "deepmerge": "^4.2.1",
     "es-dev-server": "^1.57.8",

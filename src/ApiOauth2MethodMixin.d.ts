@@ -41,6 +41,7 @@ export declare const readFlowsTypes: unique symbol;
 export declare const applyFlow: unique symbol;
 export declare const securityScheme: unique symbol;
 export declare const isRamlFlow: unique symbol;
+export declare const readPkceValue: unique symbol;
 
 declare function ApiOauth2MethodMixin<T extends new (...args: any[]) => {}>(base: T): T & ApiOauth2MethodMixinConstructor;
 export declare interface ApiOauth2MethodMixinConstructor {
@@ -273,6 +274,14 @@ export declare interface ApiOauth2MethodMixin {
    * Toggles documentation for custom property.
    */
   [toggleDocumentation](e: CustomEvent): void;
+
+  /**
+   * Checks whether the security scheme is annotated with the `pkce` annotation.
+   * This annotation is published at https://github.com/raml-org/raml-annotations/tree/master/annotations/security-schemes
+   * @param model Model for the security settings
+   * @returns True if the security settings are annotated with PKCE extension
+   */
+  [readPkceValue](model: any): boolean|undefined;
 
   [oauth2CustomPropertiesTemplate](): TemplateResult|string;
 

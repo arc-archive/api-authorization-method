@@ -127,6 +127,7 @@ class DemoPage extends ApiDemoPage {
       ['api-keys', 'API key'],
       ['oauth-flows', 'OAS OAuth Flow'],
       ['oas-bearer', 'OAS Bearer'],
+      ['oauth-pkce', 'OAuth PKCE'],
     ].map(([file, label]) => html`
       <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
       <anypoint-item data-src="${file}.json">${label}</anypoint-item>
