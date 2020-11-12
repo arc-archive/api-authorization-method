@@ -34,7 +34,7 @@ class DemoPage extends ApiDemoPage {
       'profile',
       'email'
     ];
-    this.authorizationUri = `${location.protocol}//${location.host}${location.pathname}oauth-authorize.html`;
+    this.authorizationUri = `${window.location.protocol}//${window.location.host}${window.location.pathname}oauth-authorize.html`;
 
     this._mainChangeHandler = this._mainChangeHandler.bind(this);
     this._basicChangeHandler = this._basicChangeHandler.bind(this);
@@ -127,6 +127,7 @@ class DemoPage extends ApiDemoPage {
       ['api-keys', 'API key'],
       ['oauth-flows', 'OAS OAuth Flow'],
       ['oas-bearer', 'OAS Bearer'],
+      ['oauth-pkce', 'OAuth PKCE'],
     ].map(([file, label]) => html`
       <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
       <anypoint-item data-src="${file}.json">${label}</anypoint-item>
@@ -186,6 +187,7 @@ class DemoPage extends ApiDemoPage {
       amf,
       mainChangesCounter,
       demoState,
+      oauth2redirect,
     } = this;
     return html`
       <section class="documentation-section">
@@ -197,7 +199,7 @@ class DemoPage extends ApiDemoPage {
         <arc-interactive-demo
           .states="${demoStates}"
           .selectedState="${demoState}"
-          @state-chanegd="${this._demoStateHandler}"
+          @state-changed="${this._demoStateHandler}"
           ?dark="${darkThemeActive}"
         >
 
@@ -209,6 +211,7 @@ class DemoPage extends ApiDemoPage {
             .amf="${amf}"
             slot="content"
             @change="${this._mainChangeHandler}"
+            redirectUri="${oauth2redirect}"
           ></api-authorization-method>
         </arc-interactive-demo>
         <p>Change events counter: ${mainChangesCounter}</p>

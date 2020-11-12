@@ -34,12 +34,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
 *~
 
 # temporary files which can be created if a process still has a handle open of a deleted file
@@ -57,6 +51,6 @@ $RECYCLE.BIN/
 node_modules
 coverage
 
-# AMF models
+# API files
 /demo/*.json
-!demo/apis.json
+!/demo/apis.json

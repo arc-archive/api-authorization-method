@@ -1,14 +1,20 @@
-// tslint:disable:variable-name Describing an API that's defined elsewhere.
-// tslint:disable:no-any describes the API as best we are able today
+export declare const initializeOauth1Model: unique symbol;
+export declare const preFillAmfData: unique symbol;
 
-import {html} from 'lit-element';
-import {defaultSignatureMethods} from '@advanced-rest-client/authorization-method/src/Oauth1MethodMixin.js';
+declare function ApiOauth1MethodMixin<T extends new (...args: any[]) => {}>(base: T): T & ApiOauth1MethodMixinConstructor;
+export declare interface ApiOauth1MethodMixinConstructor {
+  new(...args: any[]): ApiOauth1MethodMixin;
+}
 
-export const initializeOauth1Model: Symbol;
 
-export {ApiOauth1MethodMixin};
+export declare interface ApiOauth1MethodMixin {
+  [initializeOauth1Model](): void;
 
-declare type Constructor<T = {}> = new (...args: any[]) => T;
-interface ApiOauth1Mixin {}
-
-declare function ApiOauth1MethodMixin<TBase extends Constructor>(Base: TBase) : TBase & ApiOauth1Mixin;
+  /**
+   * Reads API security definition and applies in to the view as predefined
+   * values.
+   *
+   * @param model AMF model describing settings of the security scheme
+   */
+  [preFillAmfData](model: any): void;
+}

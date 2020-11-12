@@ -1,24 +1,39 @@
 import { fixture, assert, aTimeout, nextFrame, html } from '@open-wc/testing';
-import { AmfLoader } from './amf-loader.js';
 import {
   oauth2GrantTypes,
 } from '@advanced-rest-client/authorization-method/src/Oauth2MethodMixin.js';
 import * as MockInteractions from '@polymer/iron-test-helpers/mock-interactions.js';
+import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
+import { ApiViewModel } from '@api-components/api-view-model-transformer';
+import { AmfLoader } from './amf-loader.js';
 import '../api-authorization-method.js';
 
-describe('OAuth 2', function() {
+/** @typedef {import('../index').ApiAuthorizationMethod} ApiAuthorizationMethod */
+
+describe('OAuth 2', () => {
+  /**
+   * @param {any} amf 
+   * @param {any} security 
+   * @returns {Promise<ApiAuthorizationMethod>}
+   */
   async function basicFixture(amf, security) {
-    return (await fixture(html`<api-authorization-method
+    return (fixture(html`<api-authorization-method
       type="oauth 2"
       .amf="${amf}"
       .security="${security}"
     ></api-authorization-method>`));
   }
 
+  /**
+   * @param {any} amf 
+   * @param {string} endpoint 
+   * @param {string} method 
+   * @returns {Promise<ApiAuthorizationMethod>}
+   */
   async function modelFixture(amf, endpoint, method) {
     const security = AmfLoader.lookupSecurity(amf, endpoint, method);
     const element = await basicFixture(amf, security);
-    await aTimeout();
+    await aTimeout(0);
     return element;
   }
 
@@ -26,12 +41,15 @@ describe('OAuth 2', function() {
     ['Full model', false],
     ['Compact model', true]
   ].forEach(([label, compact]) => {
-    describe(label, () => {
+    describe(String(label), () => {
+      const viewModel = new ApiViewModel();
+
       describe('initialization', () => {
         let amf;
         let factory;
 
         before(async () => {
+          // @ts-ignore
           amf = await AmfLoader.load({ compact });
           factory = document.createElement('api-view-model-transformer');
         });
@@ -52,13 +70,14 @@ describe('OAuth 2', function() {
         it('can be initialized in a template with model', async () => {
           const security = AmfLoader.lookupSecurity(amf, '/oauth2', 'post');
           const element = await basicFixture(amf, security);
-          await aTimeout();
+          await aTimeout(0);
           assert.ok(element);
         });
 
         it('can be initialized in a template without the model', async () => {
+          // @ts-ignore
           const element = await basicFixture();
-          await aTimeout();
+          await aTimeout(0);
           assert.ok(element);
         });
       });
@@ -68,6 +87,7 @@ describe('OAuth 2', function() {
         let factory;
 
         before(async () => {
+          // @ts-ignore
           amf = await AmfLoader.load({ compact });
           factory = document.createElement('api-view-model-transformer');
         });
@@ -171,6 +191,7 @@ describe('OAuth 2', function() {
         let element;
 
         before(async () => {
+          // @ts-ignore
           amf = await AmfLoader.load({ compact });
           factory = document.createElement('api-view-model-transformer');
         });
@@ -233,16 +254,11 @@ describe('OAuth 2', function() {
 
       describe('serialize()', () => {
         let amf;
-        let factory;
-        let element;
+        let element = /** @type ApiAuthorizationMethod */ (null);
 
         before(async () => {
+          // @ts-ignore
           amf = await AmfLoader.load({ compact });
-          factory = document.createElement('api-view-model-transformer');
-        });
-
-        after(() => {
-          factory = null;
         });
 
         beforeEach(async () => {
@@ -250,7 +266,7 @@ describe('OAuth 2', function() {
         });
 
         afterEach(() => {
-          factory.clearCache();
+          viewModel.clearCache();
         });
 
         it('serializes implicit data', async () => {
@@ -274,16 +290,21 @@ describe('OAuth 2', function() {
           element.grantType = 'authorization_code';
           await nextFrame();
           const input = element.shadowRoot.querySelector('api-property-form-item[name="queryTokenResource"]');
+          // @ts-ignore
           input.value = 'test';
           const info = element.serialize();
           assert.typeOf(info.customData.token.parameters, 'array');
           assert.lengthOf(info.customData.token.parameters, 1);
+
+          assert.isUndefined(element.pkce, 'pkce is not set');
         });
+        
 
         it('serializes client credentials data', async () => {
           element.grantType = 'client_credentials';
           await nextFrame();
           const input = element.shadowRoot.querySelector('api-property-form-item[name="queryTokenResource"]');
+          // @ts-ignore
           input.value = 'test';
           const info = element.serialize();
           assert.typeOf(info.customData.token.parameters, 'array');
@@ -294,6 +315,7 @@ describe('OAuth 2', function() {
           element.grantType = 'password';
           await nextFrame();
           const input = element.shadowRoot.querySelector('api-property-form-item[name="queryTokenResource"]');
+          // @ts-ignore
           input.value = 'test';
           const info = element.serialize();
           assert.typeOf(info.customData.token.parameters, 'array');
@@ -304,6 +326,7 @@ describe('OAuth 2', function() {
           element.grantType = 'annotated_custom_grant';
           await nextFrame();
           const input = element.shadowRoot.querySelector('api-property-form-item[name="queryTokenResource"]');
+          // @ts-ignore
           input.value = 'test';
           const info = element.serialize();
           assert.typeOf(info.customData.token.parameters, 'array');
@@ -313,16 +336,11 @@ describe('OAuth 2', function() {
 
       describe('documentation rendering', () => {
         let amf;
-        let factory;
-        let element;
+        let element = /** @type ApiAuthorizationMethod */ (null);
 
         before(async () => {
+          // @ts-ignore
           amf = await AmfLoader.load({ compact });
-          factory = document.createElement('api-view-model-transformer');
-        });
-
-        after(() => {
-          factory = null;
         });
 
         beforeEach(async () => {
@@ -330,7 +348,7 @@ describe('OAuth 2', function() {
         });
 
         afterEach(() => {
-          factory.clearCache();
+          viewModel.clearCache();
         });
 
         it('does not render documentation items by default', () => {
@@ -349,18 +367,13 @@ describe('OAuth 2', function() {
 
       describe('OAS grant types (flows)', () => {
         let amf;
-        let factory;
-        let element;
+        let element = /** @type ApiAuthorizationMethod */ (null);
 
         const fileName = 'oauth-flows';
 
         before(async () => {
+          // @ts-ignore
           amf = await AmfLoader.load({ compact, fileName });
-          factory = document.createElement('api-view-model-transformer');
-        });
-
-        after(() => {
-          factory = null;
         });
 
         beforeEach(async () => {
@@ -368,7 +381,7 @@ describe('OAuth 2', function() {
         });
 
         afterEach(() => {
-          factory.clearCache();
+          viewModel.clearCache();
         });
 
         it('renders all defined grant types', () => {
@@ -414,6 +427,7 @@ describe('OAuth 2', function() {
 
         it('restores configuration when grant type is selected', async () => {
           const security = AmfLoader.lookupSecurity(amf, '/pets', 'patch');
+          // @ts-ignore
           const element = await basicFixture(amf);
           element.grantType = 'authorization_code';
           await nextFrame();
@@ -469,6 +483,34 @@ describe('OAuth 2', function() {
             ['write_pets', 'read_pets'],
             'scopes is set'
           );
+        });
+      });
+    
+      describe('PKCE extension', () => {
+        let amf;
+        let element = /** @type ApiAuthorizationMethod */ (null);
+
+        const fileName = 'oauth-pkce';
+
+        before(async () => {
+          // @ts-ignore
+          amf = await AmfLoader.load({ compact, fileName });
+        });
+
+        beforeEach(async () => {
+          element = await modelFixture(amf, '/pkce', 'get');
+        });
+
+        afterEach(() => {
+          viewModel.clearCache();
+        });
+
+        it('sets the `pkce` property to true', () => {
+          assert.isTrue(element.pkce);
+        });
+
+        it('sets the `noPkce` property to true', () => {
+          assert.isTrue(element.noPkce);
         });
       });
     });
