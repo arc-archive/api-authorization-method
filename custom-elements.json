@@ -229,11 +229,6 @@
           "type": "string | undefined"
         },
         {
-          "name": "noPkce",
-          "description": "When this property is set then the PKCE option is not rendered for the \n`authorization_code`. This is mainly meant to be used by the `api-authorization-method`\nto keep this control disabled and override generated settings when the API spec\nsays that the PKCE is supported.",
-          "type": "boolean | undefined"
-        },
-        {
           "name": "pkce",
           "description": "Whether or not the PKCE extension is enabled for this authorization configuration.\nNote, PKCE, per the spec, is only available for `authorization_code` grantType.",
           "type": "boolean"
@@ -578,12 +573,6 @@
           "name": "lastErrorMessage",
           "description": "The error message returned by the authorization library.\nIt renders error dialog when an error ocurred. \nIt is automatically cleared when the user request the token again.",
           "type": "string | undefined"
-        },
-        {
-          "name": "noPkce",
-          "attribute": "noPkce",
-          "description": "When this property is set then the PKCE option is not rendered for the \n`authorization_code`. This is mainly meant to be used by the `api-authorization-method`\nto keep this control disabled and override generated settings when the API spec\nsays that the PKCE is supported.",
-          "type": "boolean | undefined"
         },
         {
           "name": "pkce",

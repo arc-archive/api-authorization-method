@@ -91,11 +91,6 @@ const mxFunction = (base) => {
       return scheme;
     }
 
-    constructor() {
-      super();
-      this.noPkce = true;
-    }
-
     [initializeOauth2Model]() {
       const { security } = this;
       if (!this._hasType(security, this.ns.aml.vocabularies.security.ParametrizedSecurityScheme)) {
