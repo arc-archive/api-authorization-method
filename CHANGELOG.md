@@ -366,3 +366,27 @@
 * renamig the package to match other API elements [bce81f5](https://github.com/advanced-rest-client/api-authorization-method/commit/bce81f572344b9e2d1bbf60e80624fda8d514f8d) by Pawel
 
 
+<a name="0.3.0"></a>
+## [0.3.0](https://github.com/advanced-rest-client/api-authorization-method/compare/0.2.0...0.3.0) (2020-11-12)
+
+### Continuous integration
+
+* adding GH actions [4bbda32](https://github.com/advanced-rest-client/api-authorization-method/commit/4bbda327a969d0f8f9be70fc1657b23666ff90b9) by Pawel
+
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [7f00bdf](https://github.com/advanced-rest-client/api-authorization-method/commit/7f00bdff6ba28c244d7268cffc9f21605ca0ec4c) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [355feb2](https://github.com/advanced-rest-client/api-authorization-method/commit/355feb2957c51885150beb83c93b65d6dbb39865) by Ci agent
+
+
+### Features
+
+* fixes #1 Add support for PKCE for OAuth 2 [67ab4bf](https://github.com/advanced-rest-client/api-authorization-method/commit/67ab4bf6a95d0be3b52cc77179ab6000d5e211ea) by Pawel
+
+
+### Refactor
+
+* upgrading to arc types [dfb04b0](https://github.com/advanced-rest-client/api-authorization-method/commit/dfb04b0f7689d00b1d2571b713d6be693be1bdea) by Pawel
+
+
