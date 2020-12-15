@@ -415,3 +415,13 @@
 * upgrading to arc types [dfb04b0](https://github.com/advanced-rest-client/api-authorization-method/commit/dfb04b0f7689d00b1d2571b713d6be693be1bdea) by Pawel
 
 
+<a name="0.3.2"></a>
+## [0.3.2](https://github.com/advanced-rest-client/api-authorization-method/compare/0.3.0...0.3.2) (2020-12-15)
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [28addf2](https://github.com/advanced-rest-client/api-authorization-method/commit/28addf28e5a27d67fcc168d8791b8278022e5337) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [bfac6f8](https://github.com/advanced-rest-client/api-authorization-method/commit/bfac6f83d42d5da917930e6a8fa60fa644f62c49) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [7f00bdf](https://github.com/advanced-rest-client/api-authorization-method/commit/7f00bdff6ba28c244d7268cffc9f21605ca0ec4c) by Ci agent
+
+
