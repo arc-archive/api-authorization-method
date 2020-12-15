@@ -147,6 +147,28 @@ describe('OAuth 2', () => {
           assert.isTrue(node.hasAttribute('hidden'));
         });
 
+        it('should not show pkce checkbox if selected grant type is not authorization_code', async () => {
+          const element = await modelFixture(amf, '/oauth2', 'post');
+          /* Default grant type selected is Access Token for this endpoint */
+          /* Check it just in case */
+          assert.equal(element.grantType, 'implicit');
+          const node = element.shadowRoot.querySelector('.adv-toggle anypoint-switch');
+          node.click();
+          await nextFrame();
+          const pkceCheckbox = element.shadowRoot.querySelector('.advanced-section').querySelector('anypoint-checkbox');
+          assert.notExists(pkceCheckbox);
+        });
+
+        it('should show pkce checkbox unchecked by default in advanced settings with authorization_code selected', async () => {
+          const element = await modelFixture(amf, '/oauth2', 'post');
+          element.grantType = 'authorization_code';
+          const node = element.shadowRoot.querySelector('.adv-toggle anypoint-switch');
+          node.click();
+          await nextFrame();
+          const pkceCheckbox = element.shadowRoot.querySelector('.advanced-section').querySelector('anypoint-checkbox');
+          assert.isFalse(pkceCheckbox.checked);
+        });
+
         it('does not render annotation inputs when are not defined', async () => {
           const element = await modelFixture(amf, '/oauth2', 'post');
           const node = element.shadowRoot.querySelector('.custom-data-field');
@@ -427,8 +449,7 @@ describe('OAuth 2', () => {
 
         it('restores configuration when grant type is selected', async () => {
           const security = AmfLoader.lookupSecurity(amf, '/pets', 'patch');
-          // @ts-ignore
-          const element = await basicFixture(amf);
+          element = await basicFixture(amf);
           element.grantType = 'authorization_code';
           await nextFrame();
           element.security = security;
@@ -507,10 +528,6 @@ describe('OAuth 2', () => {
 
         it('sets the `pkce` property to true', () => {
           assert.isTrue(element.pkce);
-        });
-
-        it('sets the `noPkce` property to true', () => {
-          assert.isTrue(element.noPkce);
         });
       });
     });
